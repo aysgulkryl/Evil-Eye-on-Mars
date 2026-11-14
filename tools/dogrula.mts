@@ -93,9 +93,12 @@ if (existsSync(yol)) {
   const K: VitaKriter[] = [20, 20, 20, 20, 20].map((w, i) => ({ id: `k${i + 1}`, ad: { tr: '', en: '' }, agirlik: w }));
   const tam: KriterPuanlari = [3, 3, 3, 3, 3];
   const yarim: KriterPuanlari = [3, 3, 0, 0, 3];
-  dogru('Vita: hepsi 3 puan = 100', yakin(puanlayiciVita(tam, K) ?? -1, 100));
-  dogru('Vita: (3+3+0+0+3)×20 / 3 = 60', yakin(puanlayiciVita(yarim, K) ?? -1, 60));
-  dogru('Vita: eksik kriter puanı varsa null', puanlayiciVita([3, null, 3, 3, 3], K) === null);
+  dogru('Vita: hepsi 3 puan = 100', yakin(puanlayiciVita(tam, K).puan ?? -1, 100));
+  dogru('Vita: (3+3+0+0+3)×20 / (3×100) = 60', yakin(puanlayiciVita(yarim, K).puan ?? -1, 60));
+  const eksik1 = puanlayiciVita([3, null, 3, 0, 3], K);
+  dogru('Vita: boş kriter 0 sayılmaz, hesaba katılmaz (9/12 = 75)', yakin(eksik1.puan ?? -1, 75) && eksik1.dolu === 4 && yakin(eksik1.kapsam, 80));
+  const eksik2 = puanlayiciVita([3, null, null, 3, 3], K);
+  dogru('Vita: 4/5 kriterden azı doluysa yetersiz veri', eksik2.puan === null && eksik2.dolu === 3);
   const v = vitaPuani('x', { x: { jeolog: tam, biyolog: yarim } }, K);
   dogru('Vita: iki puanlayıcının ortalaması ve farkı', yakin(v.puan ?? -1, 80) && yakin(v.fark ?? -1, 40));
   dogru('Vita: rubrik yokken uzman tahmini korunur', ADAYLAR.every((a) => a.astroKaynak === 'uzman' || a.astroKaynak === 'rubrik'));
