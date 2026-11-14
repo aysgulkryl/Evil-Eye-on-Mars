@@ -26,6 +26,9 @@ export type Aday = {
   bolge: Metin2; // hangi coğrafi alanda
   gecmis: Metin2; // jeolojik ve görev geçmişi
   misyon?: string;
+  bolgeselEgimMedyan?: number; // MOLA bölgesel eğim, medyan (°)
+  bolgeselEgimDik?: number; // MOLA bölgesel eğim, en dik %10 (°)
+  puruzluluk?: number; // Pürüzlülük, 10 km (MOLA, m)
 };
 
 type Girdi = Omit<Aday, 'guvenlik'> & { guvenlik?: number };
@@ -37,6 +40,7 @@ const hazirla = (g: Girdi): Aday => ({
 export const ADAYLAR: Aday[] = [
   {
     id: 'jezero', ad: 'Jezero Crater', enlem: 18.38, boylam: 77.58, egim: 4.2, kaya: 8, rakim: -2.5, guvenlik: 78, astro: 91, veri: 'verilen',
+    bolgeselEgimMedyan: 0.55, bolgeselEgimDik: 1.07, puruzluluk: 69,
     ozellik: { tr: 'Delta & Paleogöl', en: 'Delta & Paleolake' },
     mineraller: { tr: ['Smektit Kili', 'Mg-Karbonat', 'Olivin'], en: ['Smectite Clay', 'Mg-Carbonate', 'Olivine'] },
     bolge: { tr: 'Isidis Planitia havzasının kuzeybatı kenarı, Nili Fossae yakını', en: 'NW rim of the Isidis Planitia basin, near Nili Fossae' },
@@ -48,6 +52,7 @@ export const ADAYLAR: Aday[] = [
   },
   {
     id: 'oxia', ad: 'Oxia Planum', enlem: 18.2, boylam: -24.3, egim: 1.8, kaya: 4, rakim: -3.0, guvenlik: 90, astro: 70, veri: 'verilen',
+    bolgeselEgimMedyan: 0.42, bolgeselEgimDik: 0.59, puruzluluk: 39,
     ozellik: { tr: 'Sığ Durgun Su Havzası', en: 'Shallow Standing-Water Basin' },
     mineraller: { tr: ['Vermikülit', 'Saponit', 'Silika'], en: ['Vermiculite', 'Saponite', 'Silica'] },
     bolge: { tr: 'Arabia Terra’nın batı kenarı, Chryse Planitia yakını', en: 'Western edge of Arabia Terra, near Chryse Planitia' },
@@ -59,6 +64,7 @@ export const ADAYLAR: Aday[] = [
   },
   {
     id: 'mawrth', ad: 'Mawrth Vallis', enlem: 23.99, boylam: -18.96, egim: 8.5, kaya: 15, rakim: -2.0, guvenlik: 48, astro: 88, veri: 'verilen',
+    bolgeselEgimMedyan: 1.34, bolgeselEgimDik: 2.27, puruzluluk: 133,
     ozellik: { tr: 'Masif Akarsu Kanalı', en: 'Massive Outflow Channel' },
     mineraller: { tr: ['Al-Filosilikat', 'Nontronit'], en: ['Al-Phyllosilicate', 'Nontronite'] },
     bolge: { tr: 'Arabia Terra ile Chryse Planitia arasındaki kanal ağzı', en: 'Channel mouth between Arabia Terra and Chryse Planitia' },
@@ -69,7 +75,8 @@ export const ADAYLAR: Aday[] = [
     misyon: 'Mars 2020 / ExoMars finalisti',
   },
   {
-    id: 'gale', ad: 'Gale Crater', enlem: -5.4, boylam: 137.8, egim: 6.8, kaya: 12, rakim: -4.5, guvenlik: 68, astro: 83, veri: 'verilen',
+    id: 'gale', ad: 'Gale Crater', enlem: -4.59, boylam: 137.44, egim: 6.8, kaya: 12, rakim: -4.5, guvenlik: 68, astro: 83, veri: 'verilen',
+    bolgeselEgimMedyan: 2.06, bolgeselEgimDik: 16.16, puruzluluk: 740,
     ozellik: { tr: 'Katmanlı Alüvyon', en: 'Layered Alluvium' },
     mineraller: { tr: ['Fe-Killer', 'Sülfat', 'Opal Silika'], en: ['Fe-Clays', 'Sulfate', 'Opaline Silica'] },
     bolge: { tr: 'Aeolis Palus, Elysium bölgesinin güneyi (kuzey–güney dikotomi sınırı)', en: 'Aeolis Palus, south of Elysium (hemispheric dichotomy boundary)' },
@@ -81,6 +88,7 @@ export const ADAYLAR: Aday[] = [
   },
   {
     id: 'arcadia', ad: 'Arcadia Planitia', enlem: 39.3, boylam: -171.0, egim: 0.6, kaya: 2, rakim: -4.0, guvenlik: 97, astro: 18, veri: 'verilen', gezegenKoruma: true,
+    bolgeselEgimMedyan: 1.65, bolgeselEgimDik: 4.44, puruzluluk: 146,
     ozellik: { tr: 'Buzul Düzlüğü', en: 'Glacial Plain' },
     mineraller: { tr: ['Saf Yeraltı Buz Plakaları', 'Regolit'], en: ['Pure Subsurface Ice Sheets', 'Regolith'] },
     bolge: { tr: 'Kuzey ovaları (Vastitas Borealis geçişi), Amazonian yaşlı düzlük', en: 'Northern lowlands (Vastitas Borealis transition), Amazonian-age plain' },
@@ -92,6 +100,7 @@ export const ADAYLAR: Aday[] = [
   },
   {
     id: 'eberswalde', ad: 'Eberswalde Crater', enlem: -23.86, boylam: -33.5, egim: 5.1, kaya: 9, rakim: -1.4, guvenlik: 64, astro: 86, veri: 'verilen',
+    bolgeselEgimMedyan: 1.25, bolgeselEgimDik: 4.26, puruzluluk: 139,
     ozellik: { tr: 'Ters Akarsu Deltası', en: 'Inverted Fluvial Delta' },
     mineraller: { tr: ['Fe/Mg Killer', 'Tortul Silikat'], en: ['Fe/Mg Clays', 'Sedimentary Silicate'] },
     bolge: { tr: 'Margaritifer Terra, Holden Krateri yakını (güney yayla)', en: 'Margaritifer Terra, near Holden Crater (southern highlands)' },
@@ -104,6 +113,7 @@ export const ADAYLAR: Aday[] = [
   // ------------------------------------------------------------------ TASLAK (ekip doğrulaması gerekir)
   hazirla({
     id: 'columbia', ad: 'Columbia Hills (Gusev)', enlem: -14.57, boylam: 175.47, egim: 3.0, kaya: 14, rakim: -1.9, astro: 80, veri: 'taslak',
+    bolgeselEgimMedyan: 0.18, bolgeselEgimDik: 0.32, puruzluluk: 20,
     ozellik: { tr: 'Hidrotermal silika & göl çökelleri', en: 'Hydrothermal silica & lake deposits' },
     mineraller: { tr: ['Opal-A silika', 'Mg-Fe karbonat', 'Sülfat'], en: ['Opal-A silica', 'Mg-Fe carbonate', 'Sulfate'] },
     bolge: { tr: 'Gusev Krateri, Aeolis bölgesi (güney yayla)', en: 'Gusev Crater, Aeolis region (southern highlands)' },
@@ -115,6 +125,7 @@ export const ADAYLAR: Aday[] = [
   }),
   hazirla({
     id: 'holden', ad: 'Holden Crater', enlem: -26.4, boylam: -34.0, egim: 5.5, kaya: 12, rakim: -2.3, astro: 80, veri: 'taslak',
+    bolgeselEgimMedyan: 0.56, bolgeselEgimDik: 1.42, puruzluluk: 63,
     ozellik: { tr: 'Alüvyon yelpazesi & göl çökelleri', en: 'Alluvial fans & lake deposits' },
     mineraller: { tr: ['Fe/Mg smektit', 'Klorit'], en: ['Fe/Mg smectite', 'Chlorite'] },
     bolge: { tr: 'Margaritifer Terra’nın güneyi', en: 'Southern Margaritifer Terra' },
@@ -126,6 +137,7 @@ export const ADAYLAR: Aday[] = [
   }),
   hazirla({
     id: 'nili', ad: 'Nili Fossae', enlem: 22.57, boylam: 76.8, egim: 9.0, kaya: 14, rakim: -0.3, astro: 88, veri: 'taslak',
+    bolgeselEgimMedyan: 3.17, bolgeselEgimDik: 5.38, puruzluluk: 347,
     ozellik: { tr: 'Yarılmış eski kabuk & karbonat-serpantin', en: 'Fractured ancient crust & carbonate-serpentine' },
     mineraller: { tr: ['Mg-karbonat', 'Serpantin', 'Olivin'], en: ['Mg-carbonate', 'Serpentine', 'Olivine'] },
     bolge: { tr: 'Isidis havzasının kuzeybatı çevresi', en: 'NW surroundings of the Isidis basin' },
@@ -137,6 +149,7 @@ export const ADAYLAR: Aday[] = [
   }),
   hazirla({
     id: 'meridiani', ad: 'Meridiani Planum', enlem: -0.03, boylam: -3.13, egim: 0.5, kaya: 3, rakim: -1.4, astro: 55, veri: 'taslak',
+    bolgeselEgimMedyan: 0.45, bolgeselEgimDik: 1.78, puruzluluk: 80,
     ozellik: { tr: 'Sülfat & hematit çökelleri', en: 'Sulfate & hematite deposits' },
     mineraller: { tr: ['Hematit', 'Jarosit', 'Mg/Ca sülfat'], en: ['Hematite', 'Jarosite', 'Mg/Ca sulfate'] },
     bolge: { tr: 'Ekvator, Arabia Terra’nın güneyi', en: 'Equator, south of Arabia Terra' },
@@ -148,6 +161,7 @@ export const ADAYLAR: Aday[] = [
   }),
   hazirla({
     id: 'aram', ad: 'Aram Chaos', enlem: 2.6, boylam: -21.5, egim: 9.5, kaya: 13, rakim: -3.0, astro: 74, veri: 'taslak',
+    bolgeselEgimMedyan: 1.29, bolgeselEgimDik: 2.73, puruzluluk: 110,
     ozellik: { tr: 'Kaotik arazi & sülfat/hematit', en: 'Chaotic terrain & sulfate/hematite' },
     mineraller: { tr: ['Hematit', 'Hidratlı sülfat', 'Fe-oksit'], en: ['Hematite', 'Hydrated sulfate', 'Fe-oxide'] },
     bolge: { tr: 'Margaritifer Terra / Oxia Palus sınırı, Ares Vallis’in kaynağı', en: 'Margaritifer Terra / Oxia Palus boundary, source of Ares Vallis' },
@@ -158,6 +172,7 @@ export const ADAYLAR: Aday[] = [
   }),
   hazirla({
     id: 'deut', ad: 'Deuteronilus Mensae', enlem: 43.9, boylam: 22.6, egim: 4.0, kaya: 6, rakim: -3.7, astro: 58, veri: 'taslak', gezegenKoruma: true,
+    bolgeselEgimMedyan: 0.11, bolgeselEgimDik: 0.35, puruzluluk: 32,
     ozellik: { tr: 'Buzul kalıntıları & dikotomi sınırı', en: 'Glacial remnants & dichotomy boundary' },
     mineraller: { tr: ['Yeraltı su buzu', 'Regolit'], en: ['Subsurface water ice', 'Regolith'] },
     bolge: { tr: 'Kuzey–güney dikotomi sınırı, Ismenius Lacus bölgesi', en: 'Hemispheric dichotomy boundary, Ismenius Lacus region' },
@@ -169,6 +184,7 @@ export const ADAYLAR: Aday[] = [
   }),
   hazirla({
     id: 'hellas', ad: 'Hellas Planitia (taban)', enlem: -42.4, boylam: 70.5, egim: 1.2, kaya: 5, rakim: -6.2, astro: 40, veri: 'taslak',
+    bolgeselEgimMedyan: 1.65, bolgeselEgimDik: 4.13, puruzluluk: 189,
     ozellik: { tr: 'Derin çarpma havzası tabanı', en: 'Floor of a deep impact basin' },
     mineraller: { tr: ['Toz ve regolit', 'Çökel tabakalar', 'Kenarda hidratlı mineraller'], en: ['Dust and regolith', 'Sediment layers', 'Hydrated minerals on the rim'] },
     bolge: { tr: 'Güney yaylaları; Mars’ın en büyük görünür çarpma havzası', en: 'Southern highlands; the largest visible impact basin on Mars' },
@@ -179,6 +195,7 @@ export const ADAYLAR: Aday[] = [
   }),
   hazirla({
     id: 'melas', ad: 'Melas Chasma', enlem: -10.4, boylam: -72.7, egim: 12.0, kaya: 14, rakim: -3.2, astro: 85, veri: 'taslak',
+    bolgeselEgimMedyan: 4.43, bolgeselEgimDik: 6.33, puruzluluk: 484,
     ozellik: { tr: 'Katmanlı sülfat çökelleri (ILD)', en: 'Layered sulfate deposits (ILD)' },
     mineraller: { tr: ['Hidratlı sülfat', 'Fe-oksit', 'Filosilikat'], en: ['Hydrated sulfate', 'Fe-oxide', 'Phyllosilicate'] },
     bolge: { tr: 'Valles Marineris’in merkezi (Hesperian)', en: 'Heart of Valles Marineris (Hesperian)' },
@@ -190,6 +207,7 @@ export const ADAYLAR: Aday[] = [
   }),
   hazirla({
     id: 'utopia', ad: 'Utopia Planitia', enlem: 46.7, boylam: 117.5, egim: 0.8, kaya: 4, rakim: -5.0, astro: 55, veri: 'taslak', gezegenKoruma: true,
+    bolgeselEgimMedyan: 0.25, bolgeselEgimDik: 0.38, puruzluluk: 26,
     ozellik: { tr: 'Kuzey ovası & yeraltı buzu', en: 'Northern plain & subsurface ice' },
     mineraller: { tr: ['Yeraltı su buzu', 'Regolit'], en: ['Subsurface water ice', 'Regolith'] },
     bolge: { tr: 'Kuzey ovaları; Viking 2 ve Zhurong inişlerinin yakını', en: 'Northern lowlands; near the Viking 2 and Zhurong landings' },
@@ -201,6 +219,7 @@ export const ADAYLAR: Aday[] = [
   }),
   hazirla({
     id: 'amazonis', ad: 'Amazonis Planitia', enlem: 24.8, boylam: -164.0, egim: 0.7, kaya: 3, rakim: -3.8, astro: 28, veri: 'taslak',
+    bolgeselEgimMedyan: 0.05, bolgeselEgimDik: 0.1, puruzluluk: 12,
     ozellik: { tr: 'Genç lav ovası', en: 'Young lava plain' },
     mineraller: { tr: ['Bazalt', 'Regolit', 'Olası yeraltı buzu'], en: ['Basalt', 'Regolith', 'Possible subsurface ice'] },
     bolge: { tr: 'Tharsis ile Elysium arasındaki genç ova', en: 'Young plain between Tharsis and Elysium' },

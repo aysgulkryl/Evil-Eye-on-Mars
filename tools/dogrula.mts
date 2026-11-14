@@ -7,6 +7,9 @@ import { INISLER } from '../src/data/inisler';
 import { spearman, muhendislikIndeksi } from '../src/utils/guvenlikModeli';
 import * as M from '../src/utils/mcda';
 import * as N from '../src/utils/nokta';
+import { analogEslesme } from '../src/utils/analog';
+import { ANALOG_GOZLEMLER } from '../src/data/analogGozlemler';
+import { MEKE_VERILERI } from '../src/data/meke';
 
 let hata = 0;
 const dogru = (ad: string, kosul: boolean, ayrinti = '') => {
@@ -69,5 +72,20 @@ if (existsSync(yol)) {
 } else {
   console.log('(MOLA dosyası yok: önce `npm run varliklar` çalıştırın; bu denetimler atlandı)');
 }
+// Meke analog benzerlik hesabı (ağırlıklar burada yalnızca TEST girdisidir, gerçek ağırlıklar ekipten gelecek)
+{
+  const W = { kraterGolu: 30, sulfat: 30, klorur: 20, volkanik: 20, paleogol: 0 };
+  const r1 = analogEslesme({ kraterGolu: 'evet', sulfat: 'evet', klorur: 'hayir', volkanik: 'belirsiz', paleogol: 'hayir' }, W);
+  dogru('Meke analog: (30+30+10+0)/100 = %70', r1.yuzde !== null && yakin(r1.yuzde, 70));
+  const r2 = analogEslesme({ kraterGolu: 'evet', sulfat: null, klorur: 'hayir', volkanik: 'belirsiz', paleogol: null }, W);
+  dogru('Meke analog: verisi olmayan özellik hesaba katılmaz', r2.yuzde !== null && yakin(r2.yuzde, (40 / 70) * 100) && yakin(r2.kapsam, 70));
+  const r3 = analogEslesme({ kraterGolu: 'evet', sulfat: 'evet', klorur: 'evet', volkanik: 'evet', paleogol: 'evet' });
+  dogru('Meke analog: ağırlık yoksa yüzde uydurulmaz', r3.yuzde === null && r3.durum === 'agirlik-bekleniyor');
+  dogru('her adayın analog gözlem kaydı var', ADAYLAR.every((a) => a.id in ANALOG_GOZLEMLER));
+  dogru('her adayın MOLA bölgesel değerleri var', ADAYLAR.every((a) => a.bolgeselEgimMedyan !== undefined && a.puruzluluk !== undefined));
+  dogru('Meke: id\'ler benzersiz', new Set(MEKE_VERILERI.map((m) => m.id)).size === MEKE_VERILERI.length);
+  dogru('Meke: bulunan her değerin kaynağı var', MEKE_VERILERI.every((m) => m.deger === null || m.kaynak !== null));
+}
+
 console.log(hata === 0 ? '\nTüm doğrulamalar geçti' : `\n${hata} HATA`);
 process.exit(hata === 0 ? 0 : 1);
