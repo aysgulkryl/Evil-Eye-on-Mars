@@ -5,6 +5,9 @@ import Typography from '@mui/material/Typography';
 import { METINLER, doldur } from '../data/metinler';
 import { baskinAday, birinciAraliklari, boylamMetni, egimDurumu, enlemMetni, katkilar, paretoAdaylari, skorRengi } from '../utils/mcda';
 
+import { analogGozlemleri } from '../data/analogGozlemler';
+import { ANALOG_OZELLIKLER, analogEslesme } from '../utils/analog';
+
 import type { Aday, Dil } from '../data/adaylar';
 
 type Props = {
@@ -66,6 +69,8 @@ export default function TelemetriKarti({ aday, adaylar, skor, sira, agirlikG, ag
   const aralik = birinciAraliklari(aday, adaylar);
   const KAYA_AZAMI = 20;
   const RAKIM_ARALIK = [-5, 0]; // km; yalnızca çubuk ölçeği için
+  const gozlem = analogGozlemleri(aday.id);
+  const meke = analogEslesme(gozlem);
 
   return (
     <Box sx={{ display: 'grid', gap: 1.75 }}>
@@ -105,6 +110,25 @@ export default function TelemetriKarti({ aday, adaylar, skor, sira, agirlikG, ag
         <Typography variant="caption" sx={{ color: '#7c8aa0', mt: -0.5 }}>{t.rakimNotu}</Typography>
       </Box>
 
+      {/* bölgesel arazi: MOLA'dan ölçülen (iniş ölçeğindeki eğimden farklı, km ölçeğinde) */}
+      {aday.bolgeselEgimMedyan !== undefined && (
+        <Box sx={{ display: 'grid', gap: 0.5 }}>
+          <Typography sx={etiket}>{t.araziBaslik}</Typography>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 1 }}>
+            {[
+              { ad: t.araziEgimMedyan, deger: `${aday.bolgeselEgimMedyan.toFixed(2)}°` },
+              { ad: t.araziEgimDik, deger: aday.bolgeselEgimDik !== undefined ? `${aday.bolgeselEgimDik.toFixed(2)}°` : '—' },
+              { ad: t.araziPuruzluluk, deger: aday.puruzluluk !== undefined ? `${aday.puruzluluk} m` : '—' },
+            ].map((s) => (
+              <Box key={s.ad} sx={{ p: 0.75, borderRadius: 1, bgcolor: 'rgba(255,255,255,0.04)' }}>
+                <Typography sx={{ color: '#94a3b8', fontSize: 10, lineHeight: 1.3 }}>{s.ad}</Typography>
+                <Typography sx={{ color: '#f1f5f9', fontWeight: 700, fontSize: 13, fontVariantNumeric: 'tabular-nums' }}>{s.deger}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      )}
+
       <Box sx={{ height: 1, bgcolor: 'rgba(255,255,255,0.08)' }} />
 
       <Box>
@@ -117,6 +141,46 @@ export default function TelemetriKarti({ aday, adaylar, skor, sira, agirlikG, ag
           {aday.mineraller[dil].map((m) => (
             <Chip key={m} size="small" label={m} sx={{ bgcolor: 'rgba(201,91,66,0.18)', color: '#fca58f', border: '1px solid rgba(201,91,66,0.45)', fontWeight: 600 }} />
           ))}
+        </Box>
+      </Box>
+
+      {/* Meke analog eşleşmesi: Dünya analoğu Meke Maarı ile uydudan gözlenebilen özellik benzerliği */}
+      <Box sx={{ p: 1.25, borderRadius: 1.5, bgcolor: 'rgba(56,189,248,0.07)', border: '1px solid rgba(56,189,248,0.25)', display: 'grid', gap: 0.75 }}>
+        {meke.yuzde !== null ? (
+          <>
+            <Olcu ad={t.mekeBaslik} deger={`%${meke.yuzde.toFixed(0)}`} birim="" oran={meke.yuzde} renk="#38bdf8" />
+            {meke.kapsam < 100 && (
+              <Typography variant="caption" sx={{ color: '#fcd34d' }}>{doldur(t.mekeKapsam, { k: meke.kapsam.toFixed(0) })}</Typography>
+            )}
+          </>
+        ) : (
+          <>
+            <Typography sx={etiket}>{t.mekeBaslik}</Typography>
+            <Typography variant="caption" sx={{ color: '#94a3b8' }}>
+              {meke.durum === 'agirlik-bekleniyor' ? t.mekeAgirlikBekleniyor : t.mekeVeriBekleniyor}
+            </Typography>
+          </>
+        )}
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+          {ANALOG_OZELLIKLER.map((o) => {
+            const d = gozlem[o];
+            const stil =
+              d === 'evet'
+                ? { bgcolor: 'rgba(56,189,248,0.2)', color: '#7dd3fc', border: '1px solid rgba(56,189,248,0.5)' }
+                : d === 'belirsiz'
+                  ? { bgcolor: 'rgba(252,211,77,0.12)', color: '#fcd34d', border: '1px dashed rgba(252,211,77,0.5)' }
+                  : d === 'hayir'
+                    ? { bgcolor: 'transparent', color: '#64748b', border: '1px solid rgba(100,116,139,0.4)', textDecoration: 'line-through' }
+                    : { bgcolor: 'transparent', color: '#64748b', border: '1px dashed rgba(100,116,139,0.4)' };
+            return (
+              <Chip
+                key={o}
+                size="small"
+                label={d === null ? `${t.mekeOzellik[o]} · ${t.mekeEksik}` : t.mekeOzellik[o]}
+                sx={{ ...stil, fontWeight: 600, fontSize: 11 }}
+              />
+            );
+          })}
         </Box>
       </Box>
 
