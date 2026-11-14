@@ -5,6 +5,8 @@
 //   astrobiyoloji puanı uzman tahminidir. Taslak bölgeler yayımlanmış kaynaklarla doğrulanmalıdır.
 
 import { kalibreGuvenlik } from '../utils/guvenlikModeli';
+import { GOREV_ESIKLERI, esikDegeri } from './gorevEsikleri';
+import { vitaPuani } from './vita';
 
 export type Dil = 'tr' | 'en';
 export type Metin2 = Record<Dil, string>;
@@ -29,6 +31,7 @@ export type Aday = {
   bolgeselEgimMedyan?: number; // MOLA bölgesel eğim, medyan (°)
   bolgeselEgimDik?: number; // MOLA bölgesel eğim, en dik %10 (°)
   puruzluluk?: number; // Pürüzlülük, 10 km (MOLA, m)
+  astroKaynak?: 'rubrik' | 'uzman'; // Vita puanı ekibin rubriğinden mi, eski uzman tahmininden mi?
 };
 
 type Girdi = Omit<Aday, 'guvenlik'> & { guvenlik?: number };
@@ -37,7 +40,7 @@ const hazirla = (g: Girdi): Aday => ({
   guvenlik: g.guvenlik ?? kalibreGuvenlik(g.egim, g.kaya, g.rakim),
 });
 
-export const ADAYLAR: Aday[] = [
+const HAM_ADAYLAR: Aday[] = [
   {
     id: 'jezero', ad: 'Jezero Crater', enlem: 18.38, boylam: 77.58, egim: 4.2, kaya: 8, rakim: -2.5, guvenlik: 78, astro: 91, veri: 'verilen',
     bolgeselEgimMedyan: 0.55, bolgeselEgimDik: 1.07, puruzluluk: 69,
@@ -230,6 +233,12 @@ export const ADAYLAR: Aday[] = [
   }),
 ];
 
+// Vita: rubrik puanı varsa o kullanılır (vita.ts), yoksa eski uzman tahmini kalır ve öyle işaretlenir.
+export const ADAYLAR: Aday[] = HAM_ADAYLAR.map((a): Aday => {
+  const v = vitaPuani(a.id);
+  return v.puan === null ? { ...a, astroKaynak: 'uzman' } : { ...a, astro: Math.round(v.puan), astroKaynak: 'rubrik' };
+});
+
 // Hazır tercih senaryoları: [güvenlik ağırlığı, astrobiyoloji ağırlığı] ve mühendislik kısıtları açık mı
 export const SENARYOLAR = [
   { id: 'dengeli', agirlik: [50, 50] as const, kisit: false },
@@ -240,7 +249,8 @@ export const SENARYOLAR = [
 
 export type Senaryo = (typeof SENARYOLAR)[number];
 
-export const VARSAYILAN_KISIT = { egim: 5, kaya: 10 };
+// No-Go sınırları gorevEsikleri.ts'ten gelir; kaynaklı değer yoksa prototipteki eski sınır (5°, %10) kullanılır.
+export const VARSAYILAN_KISIT = { egim: esikDegeri(GOREV_ESIKLERI.egim), kaya: esikDegeri(GOREV_ESIKLERI.kaya) };
 
 export const VERI_KAYNAKLARI = [
   { ad: 'MOLA (Mars Global Surveyor)', rol: { tr: 'Rakım (16 piksel/derece) ve eğim', en: 'Elevation (16 pixel/degree) and slope' }, url: 'https://pds-geosciences.wustl.edu/missions/mgs/mola.html' },

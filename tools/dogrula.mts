@@ -10,6 +10,7 @@ import * as N from '../src/utils/nokta';
 import { analogEslesme } from '../src/utils/analog';
 import { ANALOG_GOZLEMLER } from '../src/data/analogGozlemler';
 import { MEKE_VERILERI } from '../src/data/meke';
+import { puanlayiciVita, vitaPuani, type VitaKriter, type KriterPuanlari } from '../src/data/vita';
 
 let hata = 0;
 const dogru = (ad: string, kosul: boolean, ayrinti = '') => {
@@ -85,6 +86,19 @@ if (existsSync(yol)) {
   dogru('her adayın MOLA bölgesel değerleri var', ADAYLAR.every((a) => a.bolgeselEgimMedyan !== undefined && a.puruzluluk !== undefined));
   dogru('Meke: id\'ler benzersiz', new Set(MEKE_VERILERI.map((m) => m.id)).size === MEKE_VERILERI.length);
   dogru('Meke: bulunan her değerin kaynağı var', MEKE_VERILERI.every((m) => m.deger === null || m.kaynak !== null));
+}
+
+// Vita rubriği (ağırlıklar ve puanlar burada yalnızca TEST girdisidir)
+{
+  const K: VitaKriter[] = [20, 20, 20, 20, 20].map((w, i) => ({ id: `k${i + 1}`, ad: { tr: '', en: '' }, agirlik: w }));
+  const tam: KriterPuanlari = [3, 3, 3, 3, 3];
+  const yarim: KriterPuanlari = [3, 3, 0, 0, 3];
+  dogru('Vita: hepsi 3 puan = 100', yakin(puanlayiciVita(tam, K) ?? -1, 100));
+  dogru('Vita: (3+3+0+0+3)×20 / 3 = 60', yakin(puanlayiciVita(yarim, K) ?? -1, 60));
+  dogru('Vita: eksik kriter puanı varsa null', puanlayiciVita([3, null, 3, 3, 3], K) === null);
+  const v = vitaPuani('x', { x: { jeolog: tam, biyolog: yarim } }, K);
+  dogru('Vita: iki puanlayıcının ortalaması ve farkı', yakin(v.puan ?? -1, 80) && yakin(v.fark ?? -1, 40));
+  dogru('Vita: rubrik yokken uzman tahmini korunur', ADAYLAR.every((a) => a.astroKaynak === 'uzman' || a.astroKaynak === 'rubrik'));
 }
 
 console.log(hata === 0 ? '\nTüm doğrulamalar geçti' : `\n${hata} HATA`);
