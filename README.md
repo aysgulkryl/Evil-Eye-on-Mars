@@ -7,7 +7,7 @@ Evil Eye on Mars is an interactive 3D decision-support tool for choosing where t
 Built for the **NASA Space Apps Challenge 2026** (Ankara), challenge: *Interplanetary Survival Guide: Martian Map*.
 
 - **Live app:** <https://evil-eye-on-mars.vercel.app>
-- **Full reference list (118 sources):** [REFERENCES.md](REFERENCES.md)
+- **Full reference list (119 sources):** [REFERENCES.md](REFERENCES.md)
 
 ## What it does
 
@@ -49,7 +49,7 @@ Gale Crater has the strongest Meke match (90–100%) and passes every engineerin
 
 **NASA data:** MGS MOLA elevation (MEGDR, 16 pixels per degree), Viking MDIM 2.1 colour mosaic (NASA/USGS, public domain), Landsat 5 imagery of Lake Meke (NASA/USGS).
 
-**Other sources:** 118 published sources on Lake Meke, halophiles and Mars landing sites, each cited by ID in the code and data table ([REFERENCES.md](REFERENCES.md)).
+**Other sources:** 119 published sources on Lake Meke, halophiles and Mars landing sites, each cited by ID in the code and data table ([REFERENCES.md](REFERENCES.md)).
 
 ## How it was built
 
@@ -70,12 +70,12 @@ npm run build     # type check and production build
 
 | Name | Role |
 |---|---|
-| Ayşegül | Team lead, data catalogue, code |
-| Asude | Software, deployment |
-| Oğuz | Geology, Vita scoring |
-| Hasan | Biology, Vita scoring, Meke analog |
-| Kayra | Literature and references |
-| Umut | Imagery and human-mission data |
+| Ayşegül Karayel | Team lead, data catalogue, code |
+| Asude Öztürk | Software, deployment |
+| Oğuz Haydar Güler | Geology, Vita scoring |
+| Hasan Öztürk | Biology, Vita scoring, Meke analog |
+| Kayra İpek | Literature and references |
+| Umut Güllü | Imagery and human-mission data |
 
 ## License
 
