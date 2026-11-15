@@ -1,6 +1,6 @@
 // Meke analog benzerlik hesabı: bir Mars bölgesi, Dünya analoğu Meke Maarı'na ne kadar benziyor?
 //
-// Yöntem: Meke'nin uydudan gözlenebilen özellikleri (krater gölü yapısı, sülfat, klorür, volkanik bağlam, paleogöl)
+// Yöntem: Meke'nin uydudan gözlenebilen özellikleri (krater gölü yapısı, sülfat, klorür, volkanik bağlam, paleogöl, su kimyası/pH)
 // her Mars bölgesinde aranır. Her özellik: Evet = 1, Belirsiz = 0,5, Hayır = 0 puan.
 // Eşleşme (%) = Σ(puan × ağırlık) ÷ Σ(ağırlık) × 100
 // Verisi olmayan özellik (null) hesaba katılmaz; "kapsam" ne kadar ağırlığın veriyle desteklendiğini gösterir.
@@ -12,7 +12,7 @@
 export type Gozlem = 'evet' | 'hayir' | 'belirsiz' | null;
 
 /** Meke ile karşılaştırılan özellikler (Analog Ağırlıkları sekmesindeki satırlar). */
-export const ANALOG_OZELLIKLER = ['kraterGolu', 'sulfat', 'klorur', 'volkanik', 'paleogol'] as const;
+export const ANALOG_OZELLIKLER = ['kraterGolu', 'sulfat', 'klorur', 'volkanik', 'paleogol', 'suKimyasi'] as const;
 export type AnalogOzellik = (typeof ANALOG_OZELLIKLER)[number];
 
 /** Bir Mars bölgesinin Meke'ye karşı gözlemleri. */
@@ -28,6 +28,7 @@ export const ANALOG_AGIRLIKLARI: AnalogAgirliklar = {
   klorur: null,
   volkanik: null,
   paleogol: null,
+  suKimyasi: null, // Su kimyası (pH): Meke 6,58–8,25; Mars'ta mineral birlikteliğinden (jarosit = asidik, smektit/karbonat = nötr-bazik)
 };
 
 const PUAN: Record<Exclude<Gozlem, null>, number> = { evet: 1, belirsiz: 0.5, hayir: 0 };

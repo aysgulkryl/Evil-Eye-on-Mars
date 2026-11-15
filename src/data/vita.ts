@@ -8,37 +8,38 @@
 
 export type VitaKriter = { id: string; ad: { tr: string; en: string }; agirlik: number | null };
 
-// YER TUTUCU: Hasan (biyoloji) Vita Rubriği sekmesini kesinleştirince adlar ve ağırlıklar buraya yazılacak.
+// Kaynak: Veri Tablosu > Vita Rubriği (Hasan, biyoloji). Ağırlıklar eşit (%20).
 export const VITA_KRITERLERI: VitaKriter[] = [
-  { id: 'k1', ad: { tr: 'Suyun ne kadar süre kaldığı', en: 'Duration of liquid water' }, agirlik: null },
-  { id: 'k2', ad: { tr: 'Biyoimza koruyan mineraller', en: 'Biosignature-preserving minerals' }, agirlik: null },
-  { id: 'k3', ad: { tr: 'Kayaların yaşı / dönemi', en: 'Age / period of the rocks' }, agirlik: null },
-  { id: 'k4', ad: { tr: 'Sulu ortamın türü', en: 'Type of aqueous environment' }, agirlik: null },
-  { id: 'k5', ad: { tr: 'Biyokimyasal uyum (Meke halofilleri)', en: 'Biochemical fit (Lake Meke halophiles)' }, agirlik: null },
+  { id: 'k1', ad: { tr: 'Kayaların yaşı', en: 'Age of the rocks' }, agirlik: 20 },
+  { id: 'k2', ad: { tr: 'Sıvı suyun ne kadar süre kaldığı', en: 'Duration of liquid water' }, agirlik: 20 },
+  { id: 'k3', ad: { tr: 'Biyoimza koruyan mineraller', en: 'Biosignature-preserving minerals' }, agirlik: 20 },
+  { id: 'k4', ad: { tr: 'Çökel kaya ve hızlı gömülme', en: 'Sedimentary rock and rapid burial' }, agirlik: 20 },
+  { id: 'k5', ad: { tr: 'Radyasyondan korunma ve erişim', en: 'Radiation shielding and access' }, agirlik: 20 },
 ];
 
 /** Bir puanlayıcının 5 kritere verdiği puanlar (0-3), VITA_KRITERLERI sırasıyla. null = henüz puanlanmadı. */
 export type KriterPuanlari = [number | null, number | null, number | null, number | null, number | null];
 const bos = (): KriterPuanlari => [null, null, null, null, null];
 
-// YER TUTUCU: Vita Puanlama sekmesindeki Jeolog ve Biyolog satırları buraya yazılacak.
+// Kaynak: Veri Tablosu > Vita Puanlama. Biyolog (Hasan) 16 bölgeyi puanladı; jeolog sütunu henüz boş (bos()).
+// Puanlar "katı elips okuması"dır (kural 3-a): yalnızca iniş elipsi içindeki birimler; gerekçeler Kanıt sekmesinde.
 export const VITA_PUANLARI: Record<string, { jeolog: KriterPuanlari; biyolog: KriterPuanlari }> = {
-  jezero: { jeolog: bos(), biyolog: bos() },
-  oxia: { jeolog: bos(), biyolog: bos() },
-  mawrth: { jeolog: bos(), biyolog: bos() },
-  gale: { jeolog: bos(), biyolog: bos() },
-  arcadia: { jeolog: bos(), biyolog: bos() },
-  eberswalde: { jeolog: bos(), biyolog: bos() },
-  columbia: { jeolog: bos(), biyolog: bos() },
-  holden: { jeolog: bos(), biyolog: bos() },
-  nili: { jeolog: bos(), biyolog: bos() },
-  meridiani: { jeolog: bos(), biyolog: bos() },
-  aram: { jeolog: bos(), biyolog: bos() },
-  deut: { jeolog: bos(), biyolog: bos() },
-  hellas: { jeolog: bos(), biyolog: bos() },
-  melas: { jeolog: bos(), biyolog: bos() },
-  utopia: { jeolog: bos(), biyolog: bos() },
-  amazonis: { jeolog: bos(), biyolog: bos() },
+  jezero: { jeolog: bos(), biyolog: [0, 3, 2, 3, 2] },
+  oxia: { jeolog: bos(), biyolog: [3, 2, 2, 2, 3] },
+  mawrth: { jeolog: bos(), biyolog: [3, 2, 3, 1, 3] },
+  gale: { jeolog: bos(), biyolog: [1, 2, 2, 1, 2] },
+  arcadia: { jeolog: bos(), biyolog: [0, 0, 1, 0, 1] },
+  eberswalde: { jeolog: bos(), biyolog: [1, 3, 2, 1, 2] },
+  columbia: { jeolog: bos(), biyolog: [1, 2, 2, 1, 2] },
+  holden: { jeolog: bos(), biyolog: [1, 2, 2, 3, 1] },
+  nili: { jeolog: bos(), biyolog: [2, 2, 2, 1, 1] },
+  meridiani: { jeolog: bos(), biyolog: [2, 2, 2, 2, 1] },
+  aram: { jeolog: bos(), biyolog: [1, 2, 2, 2, 2] },
+  deut: { jeolog: bos(), biyolog: [1, 0, 1, 1, 1] },
+  hellas: { jeolog: bos(), biyolog: [2, 1, 1, 2, 1] },
+  melas: { jeolog: bos(), biyolog: [1, 3, 2, 2, 2] },
+  utopia: { jeolog: bos(), biyolog: [0, 1, 2, 0, 1] },
+  amazonis: { jeolog: bos(), biyolog: [0, 1, 1, 1, 0] },
 };
 
 /** Bir puanlayıcının puanı hesaplanabilmesi için en az kaç kriterin dolu olması gerekir (ekip kararı: 5 kriterin 4'ü). */

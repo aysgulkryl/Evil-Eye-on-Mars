@@ -16,6 +16,7 @@ import {
 
 import type { Aday, Dil } from '../data/adaylar';
 import type { Kisit } from './mcda';
+import { nogoEgim } from './mcda';
 
 type Girdi = { dil: Dil; aday: Aday; adaylar: Aday[]; agirlikG: number; agirlikA: number; kisit: Kisit; tarih?: Date };
 
@@ -59,7 +60,8 @@ export function raporOlustur({ dil, aday, adaylar, agirlikG, agirlikA, kisit, ta
   L.push(`## ${t.analiz.muhendislik}`);
   L.push(`| ${t.analiz.parametre} | ${t.analiz.deger} | ${t.analiz.esik} | ${t.analiz.sonuc} |`);
   L.push('|---|---|---|---|');
-  L.push(`| ${t.egim} | ${aday.egim}° | ≤ ${kisit.egim}° | ${aday.egim <= kisit.egim ? t.analiz.gecer : t.analiz.asar} |`);
+  L.push(`| ${t.araziEgimDik} (MOLA) | ${nogoEgim(aday)}° | ≤ ${kisit.egim}° | ${nogoEgim(aday) <= kisit.egim ? t.analiz.gecer : t.analiz.asar} |`);
+  L.push(`| ${t.egim} | ${aday.egim}° | — | — |`);
   L.push(`| ${t.kaya} | ${aday.kaya}% | ≤ ${kisit.kaya}% | ${aday.kaya <= kisit.kaya ? t.analiz.gecer : t.analiz.asar} |`);
   L.push(`| ${t.rakim} | ${aday.rakim} km | — | ${t.rakimNotu} |`);
   L.push(`| ${t.guvenlik} | ${aday.guvenlik}/100 | — | ${aday.veri === 'taslak' ? t.taslakRozet : t.verilenRozet} |`);

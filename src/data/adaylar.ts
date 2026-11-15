@@ -1,4 +1,6 @@
 // Evil Eye on Mars aday iniş bölgeleri (16).
+// 15.11.2026: Jezero, Mawrth, Eberswalde, Columbia, Holden, Nili, Melas koordinatları Veri Tablosu > Mars Adayları'ndaki iniş elipsi
+//   merkezlerine (K41, K07) güncellendi; MOLA bölgesel değerleri (10 km pencere) yeni koordinatlarla yeniden hesaplandı.
 // "verilen": ekibin NASA Space Apps için tanımladığı ilk 6 bölge (eğim/kaya/rakım/temel puanlar ekip girdisidir).
 // "taslak": sonradan eklenen 10 bölge. Koordinatlar yayımlanmış adlandırılmış özelliklerden; rakım MOLA 16 ppd verisinden okunmuştur;
 //   eğim/kaya yaklaşık literatür değerleridir; güvenlik puanı bağımsız mühendislik indeksinden (kalibre) HESAPLANIR;
@@ -42,8 +44,8 @@ const hazirla = (g: Girdi): Aday => ({
 
 const HAM_ADAYLAR: Aday[] = [
   {
-    id: 'jezero', ad: 'Jezero Crater', enlem: 18.38, boylam: 77.58, egim: 4.2, kaya: 8, rakim: -2.5, guvenlik: 78, astro: 91, veri: 'verilen',
-    bolgeselEgimMedyan: 0.55, bolgeselEgimDik: 1.07, puruzluluk: 69,
+    id: 'jezero', ad: 'Jezero Crater', enlem: 18.44, boylam: 77.45, egim: 4.2, kaya: 8, rakim: -2.5, guvenlik: 78, astro: 91, veri: 'verilen',
+    bolgeselEgimMedyan: 1.06, bolgeselEgimDik: 6.04, puruzluluk: 242,
     ozellik: { tr: 'Delta & Paleogöl', en: 'Delta & Paleolake' },
     mineraller: { tr: ['Smektit Kili', 'Mg-Karbonat', 'Olivin'], en: ['Smectite Clay', 'Mg-Carbonate', 'Olivine'] },
     bolge: { tr: 'Isidis Planitia havzasının kuzeybatı kenarı, Nili Fossae yakını', en: 'NW rim of the Isidis Planitia basin, near Nili Fossae' },
@@ -66,8 +68,8 @@ const HAM_ADAYLAR: Aday[] = [
     misyon: 'ExoMars / Rosalind Franklin (seçilen bölge)',
   },
   {
-    id: 'mawrth', ad: 'Mawrth Vallis', enlem: 23.99, boylam: -18.96, egim: 8.5, kaya: 15, rakim: -2.0, guvenlik: 48, astro: 88, veri: 'verilen',
-    bolgeselEgimMedyan: 1.34, bolgeselEgimDik: 2.27, puruzluluk: 133,
+    id: 'mawrth', ad: 'Mawrth Vallis', enlem: 23.97, boylam: -19.06, egim: 8.5, kaya: 15, rakim: -2.0, guvenlik: 48, astro: 88, veri: 'verilen',
+    bolgeselEgimMedyan: 1.34, bolgeselEgimDik: 2.83, puruzluluk: 119,
     ozellik: { tr: 'Masif Akarsu Kanalı', en: 'Massive Outflow Channel' },
     mineraller: { tr: ['Al-Filosilikat', 'Nontronit'], en: ['Al-Phyllosilicate', 'Nontronite'] },
     bolge: { tr: 'Arabia Terra ile Chryse Planitia arasındaki kanal ağzı', en: 'Channel mouth between Arabia Terra and Chryse Planitia' },
@@ -102,8 +104,8 @@ const HAM_ADAYLAR: Aday[] = [
     misyon: 'İnsanlı görev Exploration Zone adayı',
   },
   {
-    id: 'eberswalde', ad: 'Eberswalde Crater', enlem: -23.86, boylam: -33.5, egim: 5.1, kaya: 9, rakim: -1.4, guvenlik: 64, astro: 86, veri: 'verilen',
-    bolgeselEgimMedyan: 1.25, bolgeselEgimDik: 4.26, puruzluluk: 139,
+    id: 'eberswalde', ad: 'Eberswalde Crater', enlem: -23.78, boylam: -33.52, egim: 5.1, kaya: 9, rakim: -1.4, guvenlik: 64, astro: 86, veri: 'verilen',
+    bolgeselEgimMedyan: 1.72, bolgeselEgimDik: 6.3, puruzluluk: 271,
     ozellik: { tr: 'Ters Akarsu Deltası', en: 'Inverted Fluvial Delta' },
     mineraller: { tr: ['Fe/Mg Killer', 'Tortul Silikat'], en: ['Fe/Mg Clays', 'Sedimentary Silicate'] },
     bolge: { tr: 'Margaritifer Terra, Holden Krateri yakını (güney yayla)', en: 'Margaritifer Terra, near Holden Crater (southern highlands)' },
@@ -115,8 +117,8 @@ const HAM_ADAYLAR: Aday[] = [
   },
   // ------------------------------------------------------------------ TASLAK (ekip doğrulaması gerekir)
   hazirla({
-    id: 'columbia', ad: 'Columbia Hills (Gusev)', enlem: -14.57, boylam: 175.47, egim: 3.0, kaya: 14, rakim: -1.9, astro: 80, veri: 'taslak',
-    bolgeselEgimMedyan: 0.18, bolgeselEgimDik: 0.32, puruzluluk: 20,
+    id: 'columbia', ad: 'Columbia Hills (Gusev)', enlem: -14.55, boylam: 175.63, egim: 3.0, kaya: 14, rakim: -1.93, astro: 80, veri: 'taslak',
+    bolgeselEgimMedyan: 0.11, bolgeselEgimDik: 0.62, puruzluluk: 24,
     ozellik: { tr: 'Hidrotermal silika & göl çökelleri', en: 'Hydrothermal silica & lake deposits' },
     mineraller: { tr: ['Opal-A silika', 'Mg-Fe karbonat', 'Sülfat'], en: ['Opal-A silica', 'Mg-Fe carbonate', 'Sulfate'] },
     bolge: { tr: 'Gusev Krateri, Aeolis bölgesi (güney yayla)', en: 'Gusev Crater, Aeolis region (southern highlands)' },
@@ -127,8 +129,8 @@ const HAM_ADAYLAR: Aday[] = [
     misyon: 'MER-A Spirit (2004)',
   }),
   hazirla({
-    id: 'holden', ad: 'Holden Crater', enlem: -26.4, boylam: -34.0, egim: 5.5, kaya: 12, rakim: -2.3, astro: 80, veri: 'taslak',
-    bolgeselEgimMedyan: 0.56, bolgeselEgimDik: 1.42, puruzluluk: 63,
+    id: 'holden', ad: 'Holden Crater', enlem: -26.61, boylam: -34.82, egim: 5.5, kaya: 12, rakim: -2.17, astro: 80, veri: 'taslak',
+    bolgeselEgimMedyan: 1.62, bolgeselEgimDik: 4.1, puruzluluk: 282,
     ozellik: { tr: 'Alüvyon yelpazesi & göl çökelleri', en: 'Alluvial fans & lake deposits' },
     mineraller: { tr: ['Fe/Mg smektit', 'Klorit'], en: ['Fe/Mg smectite', 'Chlorite'] },
     bolge: { tr: 'Margaritifer Terra’nın güneyi', en: 'Southern Margaritifer Terra' },
@@ -139,8 +141,8 @@ const HAM_ADAYLAR: Aday[] = [
     misyon: 'MSL / Mars 2020 finalisti',
   }),
   hazirla({
-    id: 'nili', ad: 'Nili Fossae', enlem: 22.57, boylam: 76.8, egim: 9.0, kaya: 14, rakim: -0.3, astro: 88, veri: 'taslak',
-    bolgeselEgimMedyan: 3.17, bolgeselEgimDik: 5.38, puruzluluk: 347,
+    id: 'nili', ad: 'Nili Fossae', enlem: 21.03, boylam: 74.35, egim: 9.0, kaya: 14, rakim: -0.65, astro: 88, veri: 'taslak',
+    bolgeselEgimMedyan: 0.88, bolgeselEgimDik: 4.76, puruzluluk: 150,
     ozellik: { tr: 'Yarılmış eski kabuk & karbonat-serpantin', en: 'Fractured ancient crust & carbonate-serpentine' },
     mineraller: { tr: ['Mg-karbonat', 'Serpantin', 'Olivin'], en: ['Mg-carbonate', 'Serpentine', 'Olivine'] },
     bolge: { tr: 'Isidis havzasının kuzeybatı çevresi', en: 'NW surroundings of the Isidis basin' },
@@ -197,8 +199,8 @@ const HAM_ADAYLAR: Aday[] = [
     },
   }),
   hazirla({
-    id: 'melas', ad: 'Melas Chasma', enlem: -10.4, boylam: -72.7, egim: 12.0, kaya: 14, rakim: -3.2, astro: 85, veri: 'taslak',
-    bolgeselEgimMedyan: 4.43, bolgeselEgimDik: 6.33, puruzluluk: 484,
+    id: 'melas', ad: 'Melas Chasma', enlem: -9.81, boylam: -76.47, egim: 12.0, kaya: 14, rakim: -1.9, astro: 85, veri: 'taslak',
+    bolgeselEgimMedyan: 5.17, bolgeselEgimDik: 11.14, puruzluluk: 396,
     ozellik: { tr: 'Katmanlı sülfat çökelleri (ILD)', en: 'Layered sulfate deposits (ILD)' },
     mineraller: { tr: ['Hidratlı sülfat', 'Fe-oksit', 'Filosilikat'], en: ['Hydrated sulfate', 'Fe-oxide', 'Phyllosilicate'] },
     bolge: { tr: 'Valles Marineris’in merkezi (Hesperian)', en: 'Heart of Valles Marineris (Hesperian)' },

@@ -16,9 +16,16 @@ export type Esik = {
   prototip: number;
 };
 
-// YER TUTUCU: Oğuz (jeoloji) Görev Eşikleri sekmesini doldurunca buraya yazılacak.
+// Eğim: MSL (Curiosity) mühendislik kısıtı, 2–10 km ölçeğinde azami 20°.
+//   Karşılaştırılan değer: MOLA 16 ppd bölgesel eğimin en dik %10'u (p90, ~3,7 km piksel, 10 km pencere) = adaylar.ts bolgeselEgimDik.
+//   Bu bir BÖLGESEL ön elemedir; metre ölçeğindeki iniş eğimi (2–5 m) HiRISE verisi gerektirir.
+// Kaya: kaynak bulunamadı (Görev Eşikleri sekmesi boş); prototip değeri "kaynaksız" olarak kalır.
 export const GOREV_ESIKLERI: { egim: Esik; kaya: Esik } = {
-  egim: { deger: null, birim: '°', gorev: null, kaynak: null, prototip: 5 },
+  egim: {
+    deger: 20, birim: '°', gorev: 'MSL (Curiosity)',
+    kaynak: "Mars Science Laboratory Engineering Constraints User's Guide (JPL, 2007)",
+    not: '2–10 km ölçeği; MOLA bölgesel eğim, en dik %10 ile karşılaştırılır', prototip: 5,
+  },
   kaya: { deger: null, birim: '%', gorev: null, kaynak: null, prototip: 10 },
 };
 

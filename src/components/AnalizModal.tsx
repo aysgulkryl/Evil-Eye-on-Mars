@@ -32,6 +32,7 @@ import {
 
 import type { Aday, Dil } from '../data/adaylar';
 import type { Kisit } from '../utils/mcda';
+import { nogoEgim } from '../utils/mcda';
 
 type Props = {
   acik: boolean;
@@ -191,7 +192,8 @@ export default function AnalizModal({ acik, onKapat, dil, adaylar, seciliId, onS
           <Kart baslik={m.muhendislik}>
             <Box sx={{ borderRadius: 1.5, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
               {[
-                { ad: t.egim, deger: `${aday.egim.toFixed(1)}°`, esik: `≤ ${kisit.egim}°`, durum: aday.egim <= kisit.egim ? m.gecer : m.asar, ok: aday.egim <= kisit.egim, not: t.egimDurum[egimD], notRenk: DURUM_RENK[egimD] },
+                { ad: t.araziEgimDik, deger: `${nogoEgim(aday).toFixed(1)}°`, esik: `≤ ${kisit.egim}°`, durum: nogoEgim(aday) <= kisit.egim ? m.gecer : m.asar, ok: nogoEgim(aday) <= kisit.egim, not: t.egimNogoNot, notRenk: '#94a3b8' },
+                { ad: t.egim, deger: `${aday.egim.toFixed(1)}°`, esik: '—', durum: '—', ok: true, not: t.egimDurum[egimD], notRenk: DURUM_RENK[egimD] },
                 { ad: t.kaya, deger: `%${aday.kaya}`, esik: `≤ %${kisit.kaya}`, durum: aday.kaya <= kisit.kaya ? m.gecer : m.asar, ok: aday.kaya <= kisit.kaya, not: '', notRenk: '#94a3b8' },
                 { ad: t.rakim, deger: `${aday.rakim.toFixed(1)} km`, esik: '—', durum: '—', ok: true, not: t.rakimNotu, notRenk: '#94a3b8' },
               ].map((r, i) => (

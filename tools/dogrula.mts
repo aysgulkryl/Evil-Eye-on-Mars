@@ -20,19 +20,21 @@ const dogru = (ad: string, kosul: boolean, ayrinti = '') => {
 const yakin = (a: number, b: number, tol = 1e-6) => Math.abs(a - b) <= tol;
 
 const jezero = ADAYLAR.find((a) => a.id === 'jezero')!;
-dogru('50/50 bileşik skor = (78+91)/2', yakin(M.bilesikSkor(jezero, 50, 50), 84.5));
-dogru('ağırlık ölçeğinden bağımsız (10/10 = 50/50)', yakin(M.bilesikSkor(jezero, 10, 10), 84.5));
+const ort = (jezero.guvenlik + jezero.astro) / 2;
+dogru('50/50 bileşik skor = (G+A)/2', yakin(M.bilesikSkor(jezero, 50, 50), ort));
+dogru('ağırlık ölçeğinden bağımsız (10/10 = 50/50)', yakin(M.bilesikSkor(jezero, 10, 10), ort));
+dogru('Vita: Jezero rubrik puanı (biyolog) = 67', jezero.astro === 67 && jezero.astroKaynak === 'rubrik', String(jezero.astro));
 dogru('0/0 → NaN yok', Number.isFinite(M.bilesikSkor(jezero, 0, 0)));
 dogru('renk eşikleri', M.skorRengi(70) === '#10b981' && M.skorRengi(69.99) === '#f59e0b' && M.skorRengi(49.99) === '#f43f5e');
 dogru('aday ve iniş sayısı', ADAYLAR.length === 16 && INISLER.length === 16);
 
 const sira = M.siralama(ADAYLAR, 50, 50);
-dogru('50/50 ilk üç', sira.slice(0, 3).map((s) => s.aday.id).join() === 'jezero,oxia,utopia', sira.slice(0, 3).map((s) => s.aday.id).join());
+dogru('50/50 ilk üç', sira.slice(0, 3).map((s) => s.aday.id).join() === 'oxia,meridiani,hellas', sira.slice(0, 3).map((s) => s.aday.id).join());
 
 const verilen = ADAYLAR.filter((a) => a.veri === 'verilen');
-dogru('özgün 6: kazanan şeridi Arcadia→Oxia→Jezero', M.kazananSeridi(verilen).map((p) => p.aday.id).join() === 'arcadia,oxia,jezero');
-dogru('özgün 6: Pareto', M.paretoAdaylari(verilen).map((a) => a.id).sort().join() === 'arcadia,jezero,oxia');
-dogru('16 aday: Pareto cephesinde Jezero ve Oxia kalır', ['jezero', 'oxia'].every((id) => M.paretoAdaylari(ADAYLAR).some((a) => a.id === id)));
+dogru('özgün 6: kazanan şeridi Arcadia→Oxia→Mawrth', M.kazananSeridi(verilen).map((p) => p.aday.id).join() === 'arcadia,oxia,mawrth');
+dogru('özgün 6: Pareto', M.paretoAdaylari(verilen).map((a) => a.id).sort().join() === 'arcadia,oxia');
+dogru('16 aday: Pareto cephesi Oxia ve Hellas', M.paretoAdaylari(ADAYLAR).map((a) => a.id).sort().join() === 'hellas,oxia');
 
 // şerit ↔ kaba kuvvet tutarlılığı (401 nokta)
 const serit = M.kazananSeridi(ADAYLAR);
@@ -46,7 +48,9 @@ dogru('kazanan şeridi kaba kuvvetle uyumlu', yanlis === 0, `(yanlış: ${yanlis
 
 const kisit = { acik: true, ...VARSAYILAN_KISIT };
 const gecen = ADAYLAR.filter((a) => M.kisitDurumu(a, kisit).gecer).map((a) => a.id);
-dogru('kısıt (eğim≤5°, kaya≤%10): 8 bölge geçer, Mawrth elenir', gecen.length === 8 && !gecen.includes('mawrth'), gecen.join());
+dogru('eğim No-Go: MOLA p90 ≤ 20° (MSL), 16 bölgenin hepsi geçer (Gale 16,2°)', ADAYLAR.every((a) => !M.kisitDurumu(a, kisit).ihlaller.some((i) => i.tip === 'egim')));
+dogru('eğim No-Go MOLA bölgesel değeri kullanır', M.nogoEgim(ADAYLAR.find((a) => a.id === 'gale')!) === 16.16);
+dogru('kısıt (eğim≤20°, kaya≤%10): 9 bölge geçer, Mawrth elenir', gecen.length === 9 && !gecen.includes('mawrth'), gecen.join());
 const sk = M.siralama(ADAYLAR, 50, 50, kisit);
 dogru('elenenler sonda ve sıra=0', sk.filter((s) => s.elendi).every((s) => s.sira === 0) && sk.slice(0, 8).every((s) => !s.elendi));
 
@@ -75,12 +79,12 @@ if (existsSync(yol)) {
 }
 // Meke analog benzerlik hesabı (ağırlıklar burada yalnızca TEST girdisidir, gerçek ağırlıklar ekipten gelecek)
 {
-  const W = { kraterGolu: 30, sulfat: 30, klorur: 20, volkanik: 20, paleogol: 0 };
-  const r1 = analogEslesme({ kraterGolu: 'evet', sulfat: 'evet', klorur: 'hayir', volkanik: 'belirsiz', paleogol: 'hayir' }, W);
+  const W = { kraterGolu: 30, sulfat: 30, klorur: 20, volkanik: 20, paleogol: 0, suKimyasi: 0 };
+  const r1 = analogEslesme({ kraterGolu: 'evet', sulfat: 'evet', klorur: 'hayir', volkanik: 'belirsiz', paleogol: 'hayir', suKimyasi: null }, W);
   dogru('Meke analog: (30+30+10+0)/100 = %70', r1.yuzde !== null && yakin(r1.yuzde, 70));
-  const r2 = analogEslesme({ kraterGolu: 'evet', sulfat: null, klorur: 'hayir', volkanik: 'belirsiz', paleogol: null }, W);
+  const r2 = analogEslesme({ kraterGolu: 'evet', sulfat: null, klorur: 'hayir', volkanik: 'belirsiz', paleogol: null, suKimyasi: null }, W);
   dogru('Meke analog: verisi olmayan özellik hesaba katılmaz', r2.yuzde !== null && yakin(r2.yuzde, (40 / 70) * 100) && yakin(r2.kapsam, 70));
-  const r3 = analogEslesme({ kraterGolu: 'evet', sulfat: 'evet', klorur: 'evet', volkanik: 'evet', paleogol: 'evet' });
+  const r3 = analogEslesme({ kraterGolu: 'evet', sulfat: 'evet', klorur: 'evet', volkanik: 'evet', paleogol: 'evet', suKimyasi: 'evet' });
   dogru('Meke analog: ağırlık yoksa yüzde uydurulmaz', r3.yuzde === null && r3.durum === 'agirlik-bekleniyor');
   dogru('her adayın analog gözlem kaydı var', ADAYLAR.every((a) => a.id in ANALOG_GOZLEMLER));
   dogru('her adayın MOLA bölgesel değerleri var', ADAYLAR.every((a) => a.bolgeselEgimMedyan !== undefined && a.puruzluluk !== undefined));

@@ -489,7 +489,7 @@ export default function MarsKonumlamaPage() {
                   <Typography variant="caption" sx={{ color: '#cbd5e1' }}>{t.kisitEgim}</Typography>
                   <Typography variant="caption" sx={{ color: '#fff', fontWeight: 700 }}>≤ {kisitEgim}°</Typography>
                 </Box>
-                <Slider size="small" min={1} max={15} step={0.5} value={kisitEgim} onChange={(_e, v) => setKisitEgim(v as number)} aria-label={t.kisitEgim} color="error" sx={{ py: 0.5 }} />
+                <Slider size="small" min={1} max={25} step={0.5} value={kisitEgim} onChange={(_e, v) => setKisitEgim(v as number)} aria-label={t.kisitEgim} color="error" sx={{ py: 0.5 }} />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="caption" sx={{ color: '#cbd5e1' }}>{t.kisitKaya}</Typography>
                   <Typography variant="caption" sx={{ color: '#fff', fontWeight: 700 }}>≤ %{kisitKaya}</Typography>

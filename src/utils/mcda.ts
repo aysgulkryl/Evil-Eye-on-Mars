@@ -7,10 +7,14 @@ export type Kisit = { acik: boolean; egim: number; kaya: number };
 export type KisitIhlali = { tip: 'egim' | 'kaya'; deger: number; sinir: number };
 export type Siralama = { aday: Aday; skor: number; sira: number; elendi: boolean; ihlaller: KisitIhlali[] };
 
+/** No-Go eğim kontrolünde kullanılan değer: MOLA bölgesel eğimin en dik %10'u (yoksa site eğimi). Bkz. gorevEsikleri.ts. */
+export const nogoEgim = (a: Pick<Aday, 'egim' | 'bolgeselEgimDik'>): number => a.bolgeselEgimDik ?? a.egim;
+
 /** Mühendislik kısıtları (No-Go): eğim ya da kaya dağılımı sınırı aşan bölge, astrobiyolojisi ne olursa olsun elenir. */
-export function kisitDurumu(a: Pick<Aday, 'egim' | 'kaya'>, k: Kisit): { gecer: boolean; ihlaller: KisitIhlali[] } {
+export function kisitDurumu(a: Pick<Aday, 'egim' | 'kaya' | 'bolgeselEgimDik'>, k: Kisit): { gecer: boolean; ihlaller: KisitIhlali[] } {
   const ihlaller: KisitIhlali[] = [];
-  if (a.egim > k.egim) ihlaller.push({ tip: 'egim', deger: a.egim, sinir: k.egim });
+  const egim = nogoEgim(a);
+  if (egim > k.egim) ihlaller.push({ tip: 'egim', deger: egim, sinir: k.egim });
   if (a.kaya > k.kaya) ihlaller.push({ tip: 'kaya', deger: a.kaya, sinir: k.kaya });
   return { gecer: ihlaller.length === 0, ihlaller };
 }
