@@ -23,13 +23,13 @@ const jezero = ADAYLAR.find((a) => a.id === 'jezero')!;
 const ort = (jezero.guvenlik + jezero.astro) / 2;
 dogru('50/50 bileşik skor = (G+A)/2', yakin(M.bilesikSkor(jezero, 50, 50), ort));
 dogru('ağırlık ölçeğinden bağımsız (10/10 = 50/50)', yakin(M.bilesikSkor(jezero, 10, 10), ort));
-dogru('Vita: Jezero rubrik puanı (biyolog) = 67', jezero.astro === 67 && jezero.astroKaynak === 'rubrik', String(jezero.astro));
+dogru('Vita: Jezero = jeolog 73,3 ve biyolog 66,7 ortalaması = 70', jezero.astro === 70 && jezero.astroKaynak === 'rubrik', String(jezero.astro));
 dogru('0/0 → NaN yok', Number.isFinite(M.bilesikSkor(jezero, 0, 0)));
 dogru('renk eşikleri', M.skorRengi(70) === '#10b981' && M.skorRengi(69.99) === '#f59e0b' && M.skorRengi(49.99) === '#f43f5e');
 dogru('aday ve iniş sayısı', ADAYLAR.length === 16 && INISLER.length === 16);
 
 const sira = M.siralama(ADAYLAR, 50, 50);
-dogru('50/50 ilk üç', sira.slice(0, 3).map((s) => s.aday.id).join() === 'oxia,meridiani,jezero', sira.slice(0, 3).map((s) => s.aday.id).join());
+dogru('50/50 ilk üç', sira.slice(0, 3).map((s) => s.aday.id).join() === 'oxia,jezero,meridiani', sira.slice(0, 3).map((s) => s.aday.id).join());
 
 const verilen = ADAYLAR.filter((a) => a.veri === 'verilen');
 dogru('özgün 6: kazanan şeridi Arcadia→Oxia', M.kazananSeridi(verilen).map((p) => p.aday.id).join() === 'arcadia,oxia');

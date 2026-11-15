@@ -21,25 +21,26 @@ export const VITA_KRITERLERI: VitaKriter[] = [
 export type KriterPuanlari = [number | null, number | null, number | null, number | null, number | null];
 const bos = (): KriterPuanlari => [null, null, null, null, null];
 
-// Kaynak: Veri Tablosu v5 > Vita Puanlama (15.11.2026). Biyolog (Hasan) 16 bölgeyi puanladı; jeolog (Oğuz) puanlaması sürüyor (bos()).
+// Kaynak: Veri Tablosu v6 > Vita Puanlama (15.11.2026). Jeolog (Oğuz) ve biyolog (Hasan) 16 bölgeyi BAĞIMSIZ puanladı;
+// Vita = iki puanlayıcının ortalaması, aradaki fark arayüzde gösterilir.
 // Puanlar "katı elips okuması"dır (kural 3-a): yalnızca iniş elipsi içindeki birimler; gerekçeler Kanıt sekmesinde.
 export const VITA_PUANLARI: Record<string, { jeolog: KriterPuanlari; biyolog: KriterPuanlari }> = {
-  jezero: { jeolog: bos(), biyolog: [0, 3, 3, 2, 2] },
-  oxia: { jeolog: bos(), biyolog: [3, 2, 2, 3, 3] },
-  mawrth: { jeolog: bos(), biyolog: [3, 2, 3, 1, 3] },
-  gale: { jeolog: bos(), biyolog: [1, 2, 1, 1, 2] },
-  arcadia: { jeolog: bos(), biyolog: [0, 0, 1, 0, 1] },
-  eberswalde: { jeolog: bos(), biyolog: [1, 3, 2, 2, 2] },
-  columbia: { jeolog: bos(), biyolog: [1, 1, 2, 1, 2] },
-  holden: { jeolog: bos(), biyolog: [1, 2, 2, 2, 1] },
-  nili: { jeolog: bos(), biyolog: [2, 2, 2, 1, 1] },
-  meridiani: { jeolog: bos(), biyolog: [2, 2, 2, 2, 1] },
-  aram: { jeolog: bos(), biyolog: [1, 2, 2, 2, 1] },
-  deut: { jeolog: bos(), biyolog: [1, 0, 1, 1, 1] },
-  hellas: { jeolog: bos(), biyolog: [1, 1, 1, 1, 1] },
-  melas: { jeolog: bos(), biyolog: [1, 3, 2, 2, 2] },
-  utopia: { jeolog: bos(), biyolog: [0, 1, 1, 0, 1] },
-  amazonis: { jeolog: bos(), biyolog: [0, 1, 1, 1, 0] },
+  jezero: { jeolog: [1, 2, 3, 3, 2], biyolog: [0, 3, 3, 2, 2] },
+  oxia: { jeolog: [3, 2, 2, 2, 3], biyolog: [3, 2, 2, 3, 3] },
+  mawrth: { jeolog: [2, 1, 2, 1, 3], biyolog: [3, 2, 3, 1, 3] },
+  gale: { jeolog: [0, 3, 2, 1, 2], biyolog: [1, 2, 1, 1, 2] },
+  arcadia: { jeolog: [0, 0, 1, 1, 2], biyolog: [0, 0, 1, 0, 1] },
+  eberswalde: { jeolog: [2, 3, 1, 3, 1], biyolog: [1, 3, 2, 2, 2] },
+  columbia: { jeolog: [2, 1, 3, 0, 2], biyolog: [1, 1, 2, 1, 2] },
+  holden: { jeolog: [1, 1, 2, 2, 1], biyolog: [1, 2, 2, 2, 1] },
+  nili: { jeolog: [2, 2, 2, 0, 1], biyolog: [2, 2, 2, 1, 1] },
+  meridiani: { jeolog: [2, 2, 2, 1, 1], biyolog: [2, 2, 2, 2, 1] },
+  aram: { jeolog: [0, 1, 1, 2, 0], biyolog: [1, 2, 2, 2, 1] },
+  deut: { jeolog: [0, 0, 0, 2, 1], biyolog: [1, 0, 1, 1, 1] },
+  hellas: { jeolog: [1, 1, 0, 2, 0], biyolog: [1, 1, 1, 1, 1] },
+  melas: { jeolog: [2, 3, 2, 3, 2], biyolog: [1, 3, 2, 2, 2] },
+  utopia: { jeolog: [1, 1, 1, 0, 1], biyolog: [0, 1, 1, 0, 1] },
+  amazonis: { jeolog: [1, 1, 1, 1, 0], biyolog: [0, 1, 1, 1, 0] },
 };
 
 /** Bir puanlayıcının puanı hesaplanabilmesi için en az kaç kriterin dolu olması gerekir (ekip kararı: 5 kriterin 4'ü). */
