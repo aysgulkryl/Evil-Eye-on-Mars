@@ -1,4 +1,5 @@
 // Evil Eye on Mars aday iniş bölgeleri (16).
+// 15.11.2026 (2): Oxia koordinatı Veri Tablosu v5'e (K09) göre 18.27, -24.64; MOLA yeniden hesaplandı. Gale kaya %12 (prototip) → %8 (K07 §2.4).
 // 15.11.2026: Jezero, Mawrth, Eberswalde, Columbia, Holden, Nili, Melas koordinatları Veri Tablosu > Mars Adayları'ndaki iniş elipsi
 //   merkezlerine (K41, K07) güncellendi; MOLA bölgesel değerleri (10 km pencere) yeni koordinatlarla yeniden hesaplandı.
 // "verilen": ekibin NASA Space Apps için tanımladığı ilk 6 bölge (eğim/kaya/rakım/temel puanlar ekip girdisidir).
@@ -29,7 +30,7 @@ export type Aday = {
   mineraller: Record<Dil, string[]>; // CRISM tespitli / beklenen mineraller
   bolge: Metin2; // hangi coğrafi alanda
   gecmis: Metin2; // jeolojik ve görev geçmişi
-  misyon?: string;
+  misyon?: { tr: string; en: string };
   bolgeselEgimMedyan?: number; // MOLA bölgesel eğim, medyan (°)
   bolgeselEgimDik?: number; // MOLA bölgesel eğim, en dik %10 (°)
   puruzluluk?: number; // Pürüzlülük, 10 km (MOLA, m)
@@ -53,11 +54,11 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Yaklaşık 45 km çaplı krater. Yaklaşık 3,5–3,9 milyar yıl önce nehir deltasıyla beslenen bir göl barındırdı; delta ve göl çökelleri biyoimza korunumu için birinci sınıf hedef. Perseverance 18 Şubat 2021’de burada indi.',
       en: 'Crater about 45 km across. About 3.5–3.9 billion years ago it held a lake fed by a river delta; delta and lake sediments are a prime target for biosignature preservation. Perseverance landed here on 18 February 2021.',
     },
-    misyon: 'Mars 2020 / Perseverance (2021)',
+    misyon: { tr: 'Mars 2020 / Perseverance (2021)', en: 'Mars 2020 / Perseverance (2021)' },
   },
   {
-    id: 'oxia', ad: 'Oxia Planum', enlem: 18.2, boylam: -24.3, egim: 1.8, kaya: 4, rakim: -3.0, guvenlik: 90, astro: 70, veri: 'verilen',
-    bolgeselEgimMedyan: 0.42, bolgeselEgimDik: 0.59, puruzluluk: 39,
+    id: 'oxia', ad: 'Oxia Planum', enlem: 18.27, boylam: -24.64, egim: 1.8, kaya: 4, rakim: -3.0, guvenlik: 90, astro: 70, veri: 'verilen',
+    bolgeselEgimMedyan: 0.32, bolgeselEgimDik: 0.79, puruzluluk: 26,
     ozellik: { tr: 'Sığ Durgun Su Havzası', en: 'Shallow Standing-Water Basin' },
     mineraller: { tr: ['Vermikülit', 'Saponit', 'Silika'], en: ['Vermiculite', 'Saponite', 'Silica'] },
     bolge: { tr: 'Arabia Terra’nın batı kenarı, Chryse Planitia yakını', en: 'Western edge of Arabia Terra, near Chryse Planitia' },
@@ -65,7 +66,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Noachian dönemine ait (yaklaşık 3,9 milyar yıl), geniş, düz ve kil bakımından zengin bir plato. ExoMars Rosalind Franklin gezgini için seçilen iniş bölgesi.',
       en: 'A broad, flat, clay-rich Noachian plateau (about 3.9 billion years old). The landing region selected for the ExoMars Rosalind Franklin rover.',
     },
-    misyon: 'ExoMars / Rosalind Franklin (seçilen bölge)',
+    misyon: { tr: 'ExoMars / Rosalind Franklin (seçilen bölge)', en: 'ExoMars / Rosalind Franklin (selected site)' },
   },
   {
     id: 'mawrth', ad: 'Mawrth Vallis', enlem: 23.97, boylam: -19.06, egim: 8.5, kaya: 15, rakim: -2.0, guvenlik: 48, astro: 88, veri: 'verilen',
@@ -77,10 +78,11 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Noachian killi (Al ve Fe/Mg filosilikat) katmanlarının yüzlerce metre kalınlıkta açıkta olduğu en geniş alanlardan biri. Mars 2020 ve ExoMars için finalistti. Eğimli ve kayalık: iniş riski yüksek.',
       en: 'One of the widest exposures of hundreds of metres of Noachian clay (Al and Fe/Mg phyllosilicate) layers. A finalist for Mars 2020 and ExoMars. Steep and rocky: high landing risk.',
     },
-    misyon: 'Mars 2020 / ExoMars finalisti',
+    misyon: { tr: 'Mars 2020 / ExoMars finalisti', en: 'Mars 2020 / ExoMars finalist' },
   },
   {
-    id: 'gale', ad: 'Gale Crater', enlem: -4.59, boylam: 137.44, egim: 6.8, kaya: 12, rakim: -4.5, guvenlik: 68, astro: 83, veri: 'verilen',
+    id: 'gale', ad: 'Gale Crater', enlem: -4.59, boylam: 137.44, egim: 6.8, kaya: 8, // kaya < %8: K07 §2.4 Rocks (Oğuz); üst sınır yazıldı
+    rakim: -4.5, guvenlik: 68, astro: 83, veri: 'verilen',
     bolgeselEgimMedyan: 2.06, bolgeselEgimDik: 16.16, puruzluluk: 740,
     ozellik: { tr: 'Katmanlı Alüvyon', en: 'Layered Alluvium' },
     mineraller: { tr: ['Fe-Killer', 'Sülfat', 'Opal Silika'], en: ['Fe-Clays', 'Sulfate', 'Opaline Silica'] },
@@ -89,7 +91,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: '154 km çaplı krater; ortasında yaklaşık 5 km yükseklikte katmanlı Aeolis Mons (Mt. Sharp). Killer ve sülfatlar iklimin ıslaktan kuruya geçişini kaydediyor. Curiosity 2012’den beri burada çalışıyor.',
       en: '154 km crater with the layered, roughly 5 km high Aeolis Mons (Mt. Sharp) at its centre. Clays and sulfates record the climate shift from wet to dry. Curiosity has worked here since 2012.',
     },
-    misyon: 'MSL / Curiosity (2012)',
+    misyon: { tr: 'MSL / Curiosity (2012)', en: 'MSL / Curiosity (2012)' },
   },
   {
     id: 'arcadia', ad: 'Arcadia Planitia', enlem: 39.3, boylam: -171.0, egim: 0.6, kaya: 2, rakim: -4.0, guvenlik: 97, astro: 18, veri: 'verilen', gezegenKoruma: true,
@@ -101,7 +103,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Genç (Amazonian) lav ve çökellerle kaplı çok düz ovalar. Yüzeye yakın su buzu, NASA’nın insanlı görev “Exploration Zone” çalışmalarında öne çıkıyor. Astrobiyolojik kayıt zayıf.',
       en: 'Very flat plains covered by young (Amazonian) lavas and sediments. Near-surface water ice features in NASA crewed-mission “Exploration Zone” studies. Weak astrobiological record.',
     },
-    misyon: 'İnsanlı görev Exploration Zone adayı',
+    misyon: { tr: 'İnsanlı görev Exploration Zone adayı', en: 'Human-mission Exploration Zone candidate' },
   },
   {
     id: 'eberswalde', ad: 'Eberswalde Crater', enlem: -23.78, boylam: -33.52, egim: 5.1, kaya: 9, rakim: -1.4, guvenlik: 64, astro: 86, veri: 'verilen',
@@ -113,7 +115,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Delta yelpazesi erozyonla “ters rölyef” biçiminde korunmuş; Fe/Mg killeri taşıyor. MSL ve Mars 2020 için finalistti.',
       en: 'The delta fan is preserved as “inverted relief” by erosion and carries Fe/Mg clays. A finalist for MSL and Mars 2020.',
     },
-    misyon: 'MSL / Mars 2020 finalisti',
+    misyon: { tr: 'MSL / Mars 2020 finalisti', en: 'MSL / Mars 2020 finalist' },
   },
   // ------------------------------------------------------------------ TASLAK (ekip doğrulaması gerekir)
   hazirla({
@@ -126,7 +128,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Spirit (2004) burada hidrotermal opal-A silika ve karbonat buldu: sıcak su/buhar sistemi için güçlü kanıt. Mars 2020 finalistiydi (aynı yere yeniden iniş fikri).',
       en: 'Spirit (2004) found hydrothermal opal-A silica and carbonate here: strong evidence for a hot-spring/steam system. A Mars 2020 finalist (re-landing at the same place).',
     },
-    misyon: 'MER-A Spirit (2004)',
+    misyon: { tr: 'MER-A Spirit (2004)', en: 'MER-A Spirit (2004)' },
   }),
   hazirla({
     id: 'holden', ad: 'Holden Crater', enlem: -26.61, boylam: -34.82, egim: 5.5, kaya: 12, rakim: -2.17, astro: 80, veri: 'taslak',
@@ -138,7 +140,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Genç bir çarpmayla kesilen alüvyon yelpazeleri ve göl çökelleri, megabreksiya; Fe/Mg smektit içeriyor. MSL ve Mars 2020 için finalistti.',
       en: 'Alluvial fans and lake deposits cut by a younger impact, with megabreccia and Fe/Mg smectite. A finalist for MSL and Mars 2020.',
     },
-    misyon: 'MSL / Mars 2020 finalisti',
+    misyon: { tr: 'MSL / Mars 2020 finalisti', en: 'MSL / Mars 2020 finalist' },
   }),
   hazirla({
     id: 'nili', ad: 'Nili Fossae', enlem: 21.03, boylam: 74.35, egim: 9.0, kaya: 14, rakim: -0.65, astro: 88, veri: 'taslak',
@@ -150,7 +152,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Isidis çarpmasıyla çatlayan eski kabuk. Mars’ın en geniş Mg-karbonat ve serpantin (olivin alterasyonu) yüzlekleri; hidrotermal ve serpantinleşme süreçleri astrobiyoloji için çok değerli, ancak arazi engebeli.',
       en: 'Ancient crust fractured by the Isidis impact. Mars’s most extensive Mg-carbonate and serpentine (altered olivine) exposures; hydrothermal and serpentinisation processes are highly valuable for astrobiology, but the terrain is rugged.',
     },
-    misyon: 'Mars 2020 finalisti',
+    misyon: { tr: 'Mars 2020 finalisti', en: 'Mars 2020 finalist' },
   }),
   hazirla({
     id: 'meridiani', ad: 'Meridiani Planum', enlem: -0.03, boylam: -3.13, egim: 0.5, kaya: 3, rakim: -1.4, astro: 55, veri: 'taslak',
@@ -162,7 +164,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Opportunity (2004) hematit konkresyonları ve sülfatlı kum taşları buldu: asidik, kurak bir geçmişte yüzey suyu dönemleri. Çok düz ve güvenli; organik korunum ise zayıf (asidik/oksidan ortam).',
       en: 'Opportunity (2004) found hematite concretions and sulfate-rich sandstones: episodes of surface water in an acidic, arid past. Very flat and safe; organic preservation is poor (acidic/oxidising setting).',
     },
-    misyon: 'MER-B Opportunity (2004)',
+    misyon: { tr: 'MER-B Opportunity (2004)', en: 'MER-B Opportunity (2004)' },
   }),
   hazirla({
     id: 'aram', ad: 'Aram Chaos', enlem: 2.6, boylam: -21.5, egim: 9.5, kaya: 13, rakim: -3.0, astro: 74, veri: 'taslak',
@@ -185,7 +187,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Enkazla örtülü buzul kalıntıları ve kuzey ovalarına açılan mesalar. Yüzeye yakın saf su buzu insanlı görev için kaynak sayılır; gezegen koruma açısından ek inceleme gerekebilir.',
       en: 'Debris-covered glacier remnants and mesas opening to the northern plains. Near-surface pure water ice counts as a resource for crewed missions; planetary-protection review may be needed.',
     },
-    misyon: 'İnsanlı görev Exploration Zone adayı',
+    misyon: { tr: 'İnsanlı görev Exploration Zone adayı', en: 'Human-mission Exploration Zone candidate' },
   }),
   hazirla({
     id: 'hellas', ad: 'Hellas Planitia (taban)', enlem: -42.4, boylam: 70.5, egim: 1.2, kaya: 5, rakim: -6.2, astro: 40, veri: 'taslak',
@@ -208,7 +210,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Valles Marineris’in en geniş çukuru; katmanlı sülfat çökelleri ve hidratlı mineraller sulu çökelme kaydının zengin olduğunu gösteriyor. Duvar eğimleri ve engebe nedeniyle iniş çok riskli.',
       en: 'The widest basin of Valles Marineris; layered sulfates and hydrated minerals show a rich aqueous depositional record. Landing is very risky because of wall slopes and rugged terrain.',
     },
-    misyon: 'İnsanlı görev Exploration Zone adayı',
+    misyon: { tr: 'İnsanlı görev Exploration Zone adayı', en: 'Human-mission Exploration Zone candidate' },
   }),
   hazirla({
     id: 'utopia', ad: 'Utopia Planitia', enlem: 46.7, boylam: 117.5, egim: 0.8, kaya: 4, rakim: -5.0, astro: 55, veri: 'taslak', gezegenKoruma: true,
@@ -220,7 +222,7 @@ const HAM_ADAYLAR: Aday[] = [
       tr: 'Mars’ın en büyük çarpma havzası olabilecek ova; kuzey okyanus kıyı çizgisi tartışması ve yeraltı buzu. Düz ve alçak. Viking 2 (1976) burada indi, Zhurong (2021) güneyinde.',
       en: 'A plain that may be the largest impact basin on Mars; debated northern-ocean shoreline and subsurface ice. Flat and low. Viking 2 (1976) landed here; Zhurong (2021) to the south.',
     },
-    misyon: 'Viking 2 / Zhurong çevresi',
+    misyon: { tr: 'Viking 2 / Zhurong çevresi', en: 'Viking 2 / Zhurong vicinity' },
   }),
   hazirla({
     id: 'amazonis', ad: 'Amazonis Planitia', enlem: 24.8, boylam: -164.0, egim: 0.7, kaya: 3, rakim: -3.8, astro: 28, veri: 'taslak',

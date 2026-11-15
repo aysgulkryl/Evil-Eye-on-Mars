@@ -2,6 +2,6 @@
 import { createTheme } from '@mui/material/styles';
 
 export const acikTema = createTheme({
-  palette: { mode: 'light', primary: { main: '#c95b42' }, background: { paper: '#ffffff', default: '#f8fafc' } },
+  palette: { mode: 'light', primary: { main: '#1d4ed8' }, background: { paper: '#e2e7ee', default: '#d5dbe3' } },
   typography: { fontFamily: "'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif" },
 });

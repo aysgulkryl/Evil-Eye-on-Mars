@@ -75,6 +75,11 @@ export default function TelemetriKarti({ aday, adaylar, skor, sira, agirlikG, ag
   const gozlem = analogGozlemleri(aday.id);
   const meke = analogEslesme(gozlem);
   const vita = vitaPuani(aday.id);
+  // %57,5 gibi yarım puanlar kaybolmasın: tam sayıysa ondalıksız, değilse tek ondalık (dile göre virgül/nokta)
+  const yuzdeYaz = (x: number) => {
+    const y = Math.round(x * 10) / 10;
+    return Number.isInteger(y) ? String(y) : dil === 'tr' ? String(y).replace('.', ',') : String(y);
+  };
   const vitaKaynak =
     aday.astroKaynak !== 'rubrik'
       ? t.vitaUzman
@@ -141,18 +146,31 @@ export default function TelemetriKarti({ aday, adaylar, skor, sira, agirlikG, ag
 
       {/* Meke analog eşleşmesi: Dünya analoğu Meke Maarı ile uydudan gözlenebilen özellik benzerliği */}
       <Box sx={{ p: 1.25, borderRadius: 1.5, bgcolor: 'rgba(56,189,248,0.07)', border: '1px solid rgba(56,189,248,0.25)', display: 'grid', gap: 0.75 }}>
-        {meke.yuzde !== null ? (
+        {meke.alt !== null && meke.ust !== null ? (
           <>
-            <Olcu ad={t.mekeBaslik} deger={`%${meke.yuzde.toFixed(0)}`} birim="" oran={meke.yuzde} renk="#0284c7" />
-            {meke.kapsam < 100 && (
-              <Typography variant="caption" sx={{ color: '#b45309' }}>{doldur(t.mekeKapsam, { k: meke.kapsam.toFixed(0) })}</Typography>
-            )}
+            {/* aralık: koyu çubuk = kesin (alt sınır), açık çubuk = boş özelliklerden gelen belirsizlik */}
+            <Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                <Typography sx={etiket}>{t.mekeBaslik}</Typography>
+                <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontWeight: 700, color: '#0f172a', fontSize: 14 }}>
+                  {Math.abs(meke.alt - meke.ust) < 0.05 ? `%${yuzdeYaz(meke.alt)}` : `%${yuzdeYaz(meke.alt)}–${yuzdeYaz(meke.ust)}`}
+                </Typography>
+              </Box>
+              <Box sx={{ mt: 0.5, height: 7, borderRadius: 3, bgcolor: 'rgba(15,23,42,0.08)', overflow: 'hidden', position: 'relative' }}>
+                <Box sx={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: `${Math.min(100, meke.ust)}%`, bgcolor: 'rgba(2,132,199,0.3)' }} />
+                <Box sx={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: `${Math.max(1, Math.min(100, meke.alt))}%`, bgcolor: '#0284c7' }} />
+              </Box>
+            </Box>
+            <Typography variant="caption" sx={{ color: meke.kapsam < 100 ? '#b45309' : '#475569' }}>
+              {doldur(t.mekeKapsam, { k: meke.kapsam.toFixed(0) })}
+              {meke.kapsam < 100 ? ` ${t.mekeAralikAciklama}` : ''}
+            </Typography>
           </>
         ) : (
           <>
             <Typography sx={etiket}>{t.mekeBaslik}</Typography>
             <Typography variant="caption" sx={{ color: '#475569' }}>
-              {meke.durum === 'agirlik-bekleniyor' ? t.mekeAgirlikBekleniyor : t.mekeVeriBekleniyor}
+              {meke.durum === 'agirlik-bekleniyor' ? t.mekeAgirlikBekleniyor : meke.durum === 'yetersiz-veri' ? doldur(t.mekeYetersiz, { k: meke.kapsam.toFixed(0) }) : t.mekeVeriBekleniyor}
             </Typography>
           </>
         )}
@@ -214,7 +232,7 @@ export default function TelemetriKarti({ aday, adaylar, skor, sira, agirlikG, ag
         <Typography sx={{ ...etiket, mb: 0.5 }}>{t.mineraller}</Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
           {aday.mineraller[dil].map((m) => (
-            <Chip key={m} size="small" label={m} sx={{ bgcolor: 'rgba(201,91,66,0.18)', color: '#b4432c', border: '1px solid rgba(201,91,66,0.45)', fontWeight: 600 }} />
+            <Chip key={m} size="small" label={m} sx={{ bgcolor: 'rgba(37,99,235,0.18)', color: '#1d4ed8', border: '1px solid rgba(37,99,235,0.45)', fontWeight: 600 }} />
           ))}
         </Box>
       </Box>

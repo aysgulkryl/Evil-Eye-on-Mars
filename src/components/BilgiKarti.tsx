@@ -79,7 +79,7 @@ export default function BilgiKarti({ icerik, dil, kompakt, onKapat, onDetay, onA
         gap: 1.1,
         color: '#1e293b',
         borderRadius: kompakt ? 1.5 : 2,
-        bgcolor: kompakt ? 'rgba(15,23,42,0.04)' : 'rgba(255,255,255,0.97)',
+        bgcolor: kompakt ? 'rgba(15,23,42,0.04)' : 'rgba(226,231,238,0.97)',
         border: '1px solid rgba(15,23,42,0.14)',
         boxShadow: kompakt ? 'none' : '0 12px 40px rgba(15,23,42,0.18)',
         backdropFilter: kompakt ? 'none' : 'blur(10px)',

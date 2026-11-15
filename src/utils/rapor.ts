@@ -77,7 +77,7 @@ export function raporOlustur({ dil, aday, adaylar, agirlikG, agirlikA, kisit, ta
   L.push(`- ${t.mineraller}: ${aday.mineraller[dil].join(', ')}`);
   L.push(`- ${t.bolge}: ${aday.bolge[dil]}`);
   L.push(`- ${t.gecmis}: ${aday.gecmis[dil]}`);
-  if (aday.misyon) L.push(`- ${t.gorev}: ${aday.misyon}`);
+  if (aday.misyon) L.push(`- ${t.gorev}: ${aday.misyon[dil]}`);
   L.push('');
   L.push(`## ${t.analiz.dengeBaslik}`);
   L.push(

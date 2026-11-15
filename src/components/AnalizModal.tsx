@@ -137,12 +137,12 @@ export default function AnalizModal({ acik, onKapat, dil, adaylar, seciliId, onS
       maxWidth="lg"
       fullWidth
       scroll="paper"
-      slotProps={{ paper: { sx: { bgcolor: '#ffffff', color: '#1e293b', backgroundImage: 'none', border: '1px solid rgba(15,23,42,0.12)', borderRadius: 3 } } }}
+      slotProps={{ paper: { sx: { bgcolor: '#e2e7ee', color: '#1e293b', backgroundImage: 'none', border: '1px solid rgba(15,23,42,0.12)', borderRadius: 3 } } }}
     >
       {/* başlık */}
-      <Box sx={{ p: 2.25, display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap', borderBottom: '1px solid rgba(15,23,42,0.1)', background: 'linear-gradient(135deg, rgba(201,91,66,0.22), rgba(255,255,255,0))' }}>
+      <Box sx={{ p: 2.25, display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap', borderBottom: '1px solid rgba(15,23,42,0.1)', background: 'linear-gradient(135deg, rgba(37,99,235,0.22), rgba(255,255,255,0))' }}>
         <Box sx={{ flex: '1 1 260px' }}>
-          <Typography sx={{ ...etiket, color: '#b4432c' }}>Evil Eye on Mars · {m.baslik}</Typography>
+          <Typography sx={{ ...etiket, color: '#1d4ed8' }}>Evil Eye on Mars · {m.baslik}</Typography>
           <Typography variant="h5" sx={{ fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}>{aday.ad}</Typography>
           <Typography variant="body2" sx={{ color: '#475569' }}>{m.alt}</Typography>
         </Box>
@@ -229,7 +229,7 @@ export default function AnalizModal({ acik, onKapat, dil, adaylar, seciliId, onS
             </Box>
             <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap' }}>
               {aday.mineraller[dil].map((x) => (
-                <Chip key={x} size="small" label={x} sx={{ bgcolor: 'rgba(201,91,66,0.18)', color: '#b4432c', border: '1px solid rgba(201,91,66,0.45)', fontWeight: 600 }} />
+                <Chip key={x} size="small" label={x} sx={{ bgcolor: 'rgba(37,99,235,0.18)', color: '#1d4ed8', border: '1px solid rgba(37,99,235,0.45)', fontWeight: 600 }} />
               ))}
             </Box>
             <Box>
@@ -237,7 +237,7 @@ export default function AnalizModal({ acik, onKapat, dil, adaylar, seciliId, onS
               <Typography sx={{ fontSize: 13, color: '#1e293b', lineHeight: 1.65 }}>{aday.gecmis[dil]}</Typography>
               <Typography sx={{ fontSize: 12.5, color: '#475569', mt: 0.5 }}>
                 {t.bolge}: {aday.bolge[dil]}
-                {aday.misyon ? ` · ${t.gorev}: ${aday.misyon}` : ''}
+                {aday.misyon ? ` · ${t.gorev}: ${aday.misyon[dil]}` : ''}
               </Typography>
             </Box>
           </Kart>
@@ -296,7 +296,7 @@ export default function AnalizModal({ acik, onKapat, dil, adaylar, seciliId, onS
 
         {/* ----------------------------------------------------------------- yan sütun: neden yetmez + veri */}
         <Box sx={{ display: 'grid', gap: 2, alignContent: 'start' }}>
-          <Kart baslik={m.neden} vurgu="rgba(201,91,66,0.55)">
+          <Kart baslik={m.neden} vurgu="rgba(37,99,235,0.55)">
             <Typography sx={{ fontSize: 12.5, color: '#0f172a', lineHeight: 1.65 }}>{m.nedenGiris}</Typography>
             <Box component="ol" sx={{ m: 0, pl: 2.25, display: 'grid', gap: 1 }}>
               {[

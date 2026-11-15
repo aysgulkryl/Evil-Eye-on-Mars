@@ -79,7 +79,7 @@ function Graticule() {
   useEffect(() => () => geometri.dispose(), [geometri]);
   return (
     <lineSegments geometry={geometri}>
-      <lineBasicMaterial color="#9fd8ff" transparent opacity={0.1} depthWrite={false} />
+      <lineBasicMaterial color="#9fd8ff" transparent opacity={0.15} depthWrite={false} />
     </lineSegments>
   );
 }
@@ -181,7 +181,7 @@ function AdayDirekleri({
     () => ({ m: new THREE.Matrix4(), p: new THREE.Vector3(), s: new THREE.Vector3(), q: new THREE.Quaternion(), qa: new THREE.Quaternion(), c: new THREE.Color() }),
     []
   );
-  const tabanGeometri = useMemo(() => new THREE.RingGeometry(0.016, 0.021, 40).rotateX(-Math.PI / 2), []);
+  const tabanGeometri = useMemo(() => new THREE.RingGeometry(0.024, 0.035, 40).rotateX(-Math.PI / 2), []);
   useEffect(() => () => tabanGeometri.dispose(), [tabanGeometri]);
 
   useEffect(() => {
@@ -239,13 +239,14 @@ function AdayDirekleri({
       const yuk = h[i];
       const elendi = durum[a.id]?.elendi;
       const secili = a.id === seciliId;
-      // gövde: yüzeyden başlar, uca doğru incelir
+      // gövde: yüzeyden başlar; seçili sütun 2,5 kat kalın (Asude)
+      const kalinlikCarpani = secili ? 2.5 : 1;
       gecici.p.copy(n).multiplyScalar(1 + yuk / 2);
-      gecici.s.set(secili ? 1.5 : 1, yuk, secili ? 1.5 : 1);
+      gecici.s.set(0.0055 * kalinlikCarpani, yuk, 0.0055 * kalinlikCarpani);
       gecici.m.compose(gecici.p, q, gecici.s);
       govde.current?.setMatrixAt(i, gecici.m);
       // baş: küçük elmas
-      const r = secili ? 1.45 : 1;
+      const r = secili ? 1.9 : 1;
       gecici.p.copy(n).multiplyScalar(1 + yuk);
       gecici.s.set(r, r * 1.5, r);
       gecici.m.compose(gecici.p, q, gecici.s);
@@ -270,22 +271,22 @@ function AdayDirekleri({
   return (
     <>
       <instancedMesh ref={taban} args={[tabanGeometri, undefined, n]} frustumCulled={false}>
-        <meshBasicMaterial toneMapped={false} transparent opacity={0.6} side={THREE.DoubleSide} depthWrite={false} />
+        <meshBasicMaterial toneMapped={false} transparent opacity={0.95} side={THREE.DoubleSide} depthWrite={false} />
       </instancedMesh>
       <instancedMesh ref={govde} args={[undefined, undefined, n]} frustumCulled={false}>
-        <cylinderGeometry args={[0.0022, 0.0055, 1, 12]} />
-        <meshBasicMaterial toneMapped={false} transparent opacity={0.9} />
+        <cylinderGeometry args={[1, 1, 1, 12]} />
+        <meshBasicMaterial toneMapped={false} transparent opacity={0.95} />
       </instancedMesh>
       <instancedMesh ref={tepe} args={[undefined, undefined, n]} frustumCulled={false}>
-        <octahedronGeometry args={[0.0105, 0]} />
+        <octahedronGeometry args={[0.013, 0]} />
         <meshBasicMaterial toneMapped={false} />
       </instancedMesh>
       <instancedMesh ref={kolA} args={[undefined, undefined, n]} frustumCulled={false}>
-        <boxGeometry args={[0.05, 0.007, 0.007]} />
+        <boxGeometry args={[0.05, 0.01, 0.01]} />
         <meshBasicMaterial color={KIRMIZI} toneMapped={false} />
       </instancedMesh>
       <instancedMesh ref={kolB} args={[undefined, undefined, n]} frustumCulled={false}>
-        <boxGeometry args={[0.05, 0.007, 0.007]} />
+        <boxGeometry args={[0.05, 0.01, 0.01]} />
         <meshBasicMaterial color={KIRMIZI} toneMapped={false} />
       </instancedMesh>
       {/* görünmez, geniş tıklama alanları */}
@@ -309,7 +310,7 @@ function AdayDirekleri({
           onHover(null);
         }}
       >
-        <cylinderGeometry args={[0.03, 0.03, 0.26, 10]} />
+        <cylinderGeometry args={[0.035, 0.035, 0.26, 10]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </instancedMesh>
     </>
@@ -331,7 +332,7 @@ function InisIsaretleri({
   useEffect(() => {
     const m = new THREE.Matrix4();
     const p = new THREE.Vector3();
-    const s = new THREE.Vector3(1, 1.5, 1);
+    const s = new THREE.Vector3(1.2, 1.8, 1.2);
     const c = new THREE.Color();
     inisler.forEach((o, i) => {
       p.copy(yon[i].n).multiplyScalar(1.012);
@@ -350,7 +351,7 @@ function InisIsaretleri({
   return (
     <>
       <instancedMesh ref={govde} args={[undefined, undefined, n]} frustumCulled={false}>
-        <octahedronGeometry args={[0.011, 0]} />
+        <octahedronGeometry args={[0.013, 0]} />
         <meshBasicMaterial toneMapped={false} />
       </instancedMesh>
       <instancedMesh
@@ -373,7 +374,7 @@ function InisIsaretleri({
           onHover(null);
         }}
       >
-        <sphereGeometry args={[0.035, 8, 8]} />
+        <sphereGeometry args={[0.04, 8, 8]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </instancedMesh>
     </>
@@ -385,13 +386,13 @@ function SecimHalkasi({ enlem, boylam, renk }: { enlem: number; boylam: number; 
   const halka = useRef<THREE.Mesh>(null);
   const yon = useMemo(() => yonleri([{ enlem, boylam }])[0], [enlem, boylam]);
   useFrame(({ clock }) => {
-    if (halka.current) halka.current.scale.setScalar(1 + 0.3 * Math.sin(clock.elapsedTime * 3));
+    if (halka.current) halka.current.scale.setScalar(1 + 0.4 * Math.sin(clock.elapsedTime * 4));
   });
   return (
     <group position={yon.n} quaternion={yon.q}>
-      <mesh ref={halka} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]}>
-        <ringGeometry args={[0.04, 0.047, 48]} />
-        <meshBasicMaterial color={renk} toneMapped={false} transparent opacity={0.9} side={THREE.DoubleSide} depthWrite={false} />
+      <mesh ref={halka} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
+        <ringGeometry args={[0.05, 0.068, 48]} />
+        <meshBasicMaterial color={renk} toneMapped={false} transparent opacity={1} side={THREE.DoubleSide} depthWrite={false} />
       </mesh>
     </group>
   );
@@ -402,11 +403,11 @@ function SondaIsareti({ sonda }: { sonda: Sonda }) {
   return (
     <group position={yon.n} quaternion={yon.q}>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]}>
-        <ringGeometry args={[0.018, 0.024, 32]} />
+        <ringGeometry args={[0.022, 0.03, 32]} />
         <meshBasicMaterial color="#22d3ee" toneMapped={false} side={THREE.DoubleSide} depthWrite={false} />
       </mesh>
       <mesh position={[0, 0.026, 0]}>
-        <octahedronGeometry args={[0.008, 0]} />
+        <octahedronGeometry args={[0.01, 0]} />
         <meshBasicMaterial color="#22d3ee" toneMapped={false} />
       </mesh>
     </group>

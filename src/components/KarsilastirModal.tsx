@@ -189,7 +189,7 @@ export default function KarsilastirModal({ acik, onKapat, dil, adaylar, aId, bId
       maxWidth="md"
       fullWidth
       scroll="paper"
-      slotProps={{ paper: { sx: { bgcolor: '#ffffff', color: '#1e293b', backgroundImage: 'none', border: '1px solid rgba(15,23,42,0.12)', borderRadius: 3 } } }}
+      slotProps={{ paper: { sx: { bgcolor: '#e2e7ee', color: '#1e293b', backgroundImage: 'none', border: '1px solid rgba(15,23,42,0.12)', borderRadius: 3 } } }}
     >
       <Box sx={{ p: 2.25, pb: 1.5, display: 'flex', alignItems: 'flex-start', gap: 1, borderBottom: '1px solid rgba(15,23,42,0.1)' }}>
         <Box sx={{ flex: 1 }}>

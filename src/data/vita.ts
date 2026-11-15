@@ -21,24 +21,24 @@ export const VITA_KRITERLERI: VitaKriter[] = [
 export type KriterPuanlari = [number | null, number | null, number | null, number | null, number | null];
 const bos = (): KriterPuanlari => [null, null, null, null, null];
 
-// Kaynak: Veri Tablosu > Vita Puanlama. Biyolog (Hasan) 16 bölgeyi puanladı; jeolog sütunu henüz boş (bos()).
+// Kaynak: Veri Tablosu v5 > Vita Puanlama (15.11.2026). Biyolog (Hasan) 16 bölgeyi puanladı; jeolog (Oğuz) puanlaması sürüyor (bos()).
 // Puanlar "katı elips okuması"dır (kural 3-a): yalnızca iniş elipsi içindeki birimler; gerekçeler Kanıt sekmesinde.
 export const VITA_PUANLARI: Record<string, { jeolog: KriterPuanlari; biyolog: KriterPuanlari }> = {
-  jezero: { jeolog: bos(), biyolog: [0, 3, 2, 3, 2] },
-  oxia: { jeolog: bos(), biyolog: [3, 2, 2, 2, 3] },
+  jezero: { jeolog: bos(), biyolog: [0, 3, 3, 2, 2] },
+  oxia: { jeolog: bos(), biyolog: [3, 2, 2, 3, 3] },
   mawrth: { jeolog: bos(), biyolog: [3, 2, 3, 1, 3] },
-  gale: { jeolog: bos(), biyolog: [1, 2, 2, 1, 2] },
+  gale: { jeolog: bos(), biyolog: [1, 2, 1, 1, 2] },
   arcadia: { jeolog: bos(), biyolog: [0, 0, 1, 0, 1] },
-  eberswalde: { jeolog: bos(), biyolog: [1, 3, 2, 1, 2] },
-  columbia: { jeolog: bos(), biyolog: [1, 2, 2, 1, 2] },
-  holden: { jeolog: bos(), biyolog: [1, 2, 2, 3, 1] },
+  eberswalde: { jeolog: bos(), biyolog: [1, 3, 2, 2, 2] },
+  columbia: { jeolog: bos(), biyolog: [1, 1, 2, 1, 2] },
+  holden: { jeolog: bos(), biyolog: [1, 2, 2, 2, 1] },
   nili: { jeolog: bos(), biyolog: [2, 2, 2, 1, 1] },
   meridiani: { jeolog: bos(), biyolog: [2, 2, 2, 2, 1] },
-  aram: { jeolog: bos(), biyolog: [1, 2, 2, 2, 2] },
+  aram: { jeolog: bos(), biyolog: [1, 2, 2, 2, 1] },
   deut: { jeolog: bos(), biyolog: [1, 0, 1, 1, 1] },
-  hellas: { jeolog: bos(), biyolog: [2, 1, 1, 2, 1] },
+  hellas: { jeolog: bos(), biyolog: [1, 1, 1, 1, 1] },
   melas: { jeolog: bos(), biyolog: [1, 3, 2, 2, 2] },
-  utopia: { jeolog: bos(), biyolog: [0, 1, 2, 0, 1] },
+  utopia: { jeolog: bos(), biyolog: [0, 1, 1, 0, 1] },
   amazonis: { jeolog: bos(), biyolog: [0, 1, 1, 1, 0] },
 };
 
@@ -99,3 +99,25 @@ export function vitaPuani(id: string, puanlar = VITA_PUANLARI, kriterler: VitaKr
     fark: j?.puan != null && b?.puan != null ? Math.abs(j.puan - b.puan) : null,
   };
 }
+
+// Erişilebilir hedeflerle okuma (Hasan, Veri Tablosu v5 > Vita Puanlama J–N sütunları): elipsin dışındaki, gezginin
+// ulaşabileceği hedefler de sayılır. Arayüzde kullanılmaz; karşılaştırma ve jüri sorusu için saklanır.
+// Sonuç: Oxia iki okumada da 1. (hedefleri elipsin içinde); erişilebilir okumada Jezero 2.ye çıkar.
+export const VITA_PUANLARI_ERISILEBILIR: Record<string, KriterPuanlari> = {
+  jezero: [3, 3, 3, 3, 2],
+  oxia: [3, 2, 2, 3, 3],
+  mawrth: [3, 2, 3, 1, 3],
+  gale: [2, 2, 3, 2, 2],
+  arcadia: [0, 0, 1, 0, 1],
+  eberswalde: [1, 3, 2, 3, 2],
+  columbia: [1, 2, 2, 1, 2],
+  holden: [1, 2, 2, 3, 1],
+  nili: [3, 2, 2, 1, 2],
+  meridiani: [2, 2, 2, 2, 1],
+  aram: [1, 2, 2, 2, 1],
+  deut: [1, 0, 1, 1, 1],
+  hellas: [1, 1, 1, 1, 1],
+  melas: [1, 3, 2, 3, 2],
+  utopia: [0, 1, 1, 0, 1],
+  amazonis: [0, 1, 1, 1, 0],
+};

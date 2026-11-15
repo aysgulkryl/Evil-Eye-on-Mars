@@ -47,9 +47,19 @@ import type { Odak, Sonda, Isaret, AdayDurum } from '../components/MarsKure';
 
 // ----------------------------------------------------------------------
 
+// Dış çerçevedeki yıldızlar (saf CSS): her nokta kendi tekrar boyutuyla döşenir; farklı boyutlar deseni gizler
+const YILDIZ_NOKTALARI: [number, number, number, number, number][] = [
+  // [tekrar boyutu px, x, y, yarıçap px, opaklık]
+  [173, 23, 41, 1, 0.7], [173, 97, 13, 1, 0.5], [173, 141, 88, 1.5, 0.8], [173, 61, 129, 1, 0.45], [173, 12, 160, 1, 0.6],
+  [251, 188, 37, 1, 0.55], [251, 40, 210, 1.5, 0.7], [251, 131, 152, 1, 0.4], [251, 227, 236, 1, 0.6],
+  [397, 311, 71, 2, 0.85], [397, 77, 333, 1, 0.5], [397, 205, 289, 1.5, 0.65], [397, 368, 380, 1, 0.5],
+];
+const YILDIZLAR = YILDIZ_NOKTALARI.map(([, x, y, r, o]) => `radial-gradient(${r}px ${r}px at ${x}px ${y}px, rgba(255,255,255,${o}), transparent)`).join(', ');
+const YILDIZ_BOYUT = YILDIZ_NOKTALARI.map(([k]) => `${k}px ${k}px`).join(', ');
+
 const PANEL_SX = {
-  bgcolor: '#f8fafc',
-  border: '1px solid rgba(15,23,42,0.09)',
+  bgcolor: '#d5dbe3',
+  border: '1px solid rgba(15,23,42,0.12)',
   borderRadius: 2,
   color: '#1e293b',
   p: 2,
@@ -423,7 +433,10 @@ export default function MarsKonumlamaPage() {
           minHeight: { lg: 640 },
           p: 1.5,
           borderRadius: 3,
-          bgcolor: '#05070d',
+          // dış çerçeve: kürenin arkasındaki uzayla aynı siyah + hafif yıldız alanı (saf CSS, görsel dosya yok)
+          bgcolor: '#04060b',
+          backgroundImage: YILDIZLAR,
+          backgroundSize: YILDIZ_BOYUT,
           border: '1px solid rgba(255,255,255,0.08)',
         }}
       >
@@ -431,9 +444,9 @@ export default function MarsKonumlamaPage() {
         <Box sx={{ ...PANEL_SX, display: 'grid', alignContent: 'start', gap: 1.5, order: { xs: 2, lg: 1 } }}>
           <ThemeProvider theme={acikTema}>
           <Box>
-            <Chip size="small" label={t.rozet} sx={{ bgcolor: 'rgba(201,91,66,0.2)', color: '#b4432c', border: '1px solid rgba(201,91,66,0.5)', fontWeight: 700, mb: 1 }} />
+            <Chip size="small" label={t.rozet} sx={{ bgcolor: 'rgba(37,99,235,0.2)', color: '#1d4ed8', border: '1px solid rgba(37,99,235,0.5)', fontWeight: 700, mb: 1 }} />
             <Typography component="h1" sx={{ fontWeight: 800, fontSize: 18, lineHeight: 1.25, color: '#0f172a' }}>
-              Evil Eye on Mars <span style={{ color: '#c95b42' }}>|</span> Mars Landing &amp; Astrobiology Matrix
+              Evil Eye on Mars <span style={{ color: '#1d4ed8' }}>|</span> Mars Landing &amp; Astrobiology Matrix
             </Typography>
             <Typography variant="caption" sx={{ color: '#475569', display: 'block', mt: 0.5, lineHeight: 1.45 }}>
               {t.alt}
@@ -455,9 +468,9 @@ export default function MarsKonumlamaPage() {
                     title={t.senaryoIpucu[s.id as keyof typeof t.senaryoIpucu]}
                     onClick={() => senaryoUygula(s)}
                     sx={{
-                      color: aktifSen ? '#0f172a' : '#334155',
-                      bgcolor: aktifSen ? 'rgba(201,91,66,0.4)' : 'rgba(15,23,42,0.06)',
-                      border: `1px solid ${aktifSen ? '#c95b42' : 'rgba(15,23,42,0.12)'}`,
+                      color: aktifSen ? '#ffffff' : '#334155',
+                      bgcolor: aktifSen ? '#2563eb' : 'rgba(15,23,42,0.06)',
+                      border: `1px solid ${aktifSen ? '#1d4ed8' : 'rgba(15,23,42,0.12)'}`,
                       fontWeight: 600,
                     }}
                   />
@@ -782,7 +795,7 @@ export default function MarsKonumlamaPage() {
                   size="small"
                   onClick={() => setDil(d)}
                   aria-pressed={dil === d}
-                  sx={{ minWidth: 38, borderRadius: 0, color: '#fff', fontWeight: 800, bgcolor: dil === d ? 'rgba(201,91,66,0.7)' : 'rgba(5,7,13,0.6)', '&:hover': { bgcolor: dil === d ? 'rgba(201,91,66,0.85)' : 'rgba(255,255,255,0.12)' } }}
+                  sx={{ minWidth: 38, borderRadius: 0, color: '#fff', fontWeight: 800, bgcolor: dil === d ? 'rgba(37,99,235,0.7)' : 'rgba(5,7,13,0.6)', '&:hover': { bgcolor: dil === d ? 'rgba(37,99,235,0.85)' : 'rgba(255,255,255,0.12)' } }}
                 >
                   {d.toUpperCase()}
                 </Button>
@@ -793,7 +806,7 @@ export default function MarsKonumlamaPage() {
           {/* alt bilgi: sunum anlatımı ya da etkileşim ipucu */}
           <Box sx={{ position: 'absolute', left: 12, right: 12, bottom: 10, display: 'flex', justifyContent: 'center', pointerEvents: 'none', zIndex: 4 }}>
             {turAciklamasi ? (
-              <Box sx={{ maxWidth: 640, px: 2, py: 1.25, borderRadius: 2, bgcolor: 'rgba(5,7,13,0.88)', border: '1px solid rgba(201,91,66,0.6)', color: '#fff', textAlign: 'center', boxShadow: '0 0 24px rgba(201,91,66,0.25)' }} aria-live="polite">
+              <Box sx={{ maxWidth: 640, px: 2, py: 1.25, borderRadius: 2, bgcolor: 'rgba(5,7,13,0.88)', border: '1px solid rgba(37,99,235,0.6)', color: '#fff', textAlign: 'center', boxShadow: '0 0 24px rgba(37,99,235,0.25)' }} aria-live="polite">
                 <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: 1.5 }}>{turAciklamasi}</Typography>
               </Box>
             ) : (
