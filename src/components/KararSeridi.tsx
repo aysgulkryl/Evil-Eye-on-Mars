@@ -9,12 +9,12 @@ import type { Aday } from '../data/adaylar';
 
 // Aday kimlik renkleri (sütun/skor renginden ayrı: burada "kim" önemlidir, "ne kadar iyi" değil)
 export const ADAY_RENKLERI: Record<string, string> = {
-  jezero: '#22d3ee',
-  oxia: '#a78bfa',
-  mawrth: '#f472b6',
-  gale: '#fb923c',
-  arcadia: '#60a5fa',
-  eberswalde: '#34d399',
+  jezero: '#0891b2',
+  oxia: '#7c3aed',
+  mawrth: '#db2777',
+  gale: '#ea580c',
+  arcadia: '#2563eb',
+  eberswalde: '#059669',
 };
 
 type Props = {
@@ -38,7 +38,7 @@ export default function KararSeridi({ adaylar, astroPay, baslik, ipucu, guvenlik
 
   return (
     <Box>
-      <Typography variant="overline" sx={{ color: '#94a3b8', letterSpacing: 1, lineHeight: 1.4, display: 'block' }}>
+      <Typography variant="overline" sx={{ color: '#475569', letterSpacing: 1, lineHeight: 1.4, display: 'block' }}>
         {baslik}
       </Typography>
 
@@ -49,11 +49,11 @@ export default function KararSeridi({ adaylar, astroPay, baslik, ipucu, guvenlik
           const r = e.currentTarget.getBoundingClientRect();
           onPayDegis(Math.round(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * 100));
         }}
-        sx={{ position: 'relative', mt: 0.75, height: 34, borderRadius: 1, overflow: 'hidden', display: 'flex', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.12)' }}
+        sx={{ position: 'relative', mt: 0.75, height: 34, borderRadius: 1, overflow: 'hidden', display: 'flex', cursor: 'pointer', border: '1px solid rgba(15,23,42,0.12)' }}
       >
         {parcalar.map((p) => {
           const genislik = p.bitis - p.baslangic;
-          const renk = ADAY_RENKLERI[p.aday.id] || '#94a3b8';
+          const renk = ADAY_RENKLERI[p.aday.id] || '#475569';
           return (
             <Box
               key={`${p.aday.id}-${p.baslangic}`}
@@ -61,7 +61,7 @@ export default function KararSeridi({ adaylar, astroPay, baslik, ipucu, guvenlik
               sx={{
                 width: `${genislik}%`,
                 bgcolor: `${renk}33`,
-                borderRight: '1px solid rgba(255,255,255,0.18)',
+                borderRight: '1px solid rgba(15,23,42,0.18)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -85,19 +85,19 @@ export default function KararSeridi({ adaylar, astroPay, baslik, ipucu, guvenlik
             bottom: 0,
             left: `calc(${astroPay}% - 1px)`,
             width: 2,
-            bgcolor: '#fff',
-            boxShadow: '0 0 8px rgba(255,255,255,0.9)',
+            bgcolor: '#0f172a',
+            boxShadow: '0 0 8px rgba(15,23,42,0.9)',
             transition: 'left 120ms ease-out',
             pointerEvents: 'none',
           }}
         />
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5, color: '#94a3b8', fontSize: 11 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5, color: '#475569', fontSize: 11 }}>
         <span>{guvenlikEtiket}</span>
         <span>{astroEtiket}</span>
       </Box>
-      <Typography variant="caption" sx={{ color: '#7c8aa0', display: 'block', mt: 0.5, lineHeight: 1.4 }}>
+      <Typography variant="caption" sx={{ color: '#64748b', display: 'block', mt: 0.5, lineHeight: 1.4 }}>
         {ipucu}
       </Typography>
     </Box>

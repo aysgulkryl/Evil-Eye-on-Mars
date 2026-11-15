@@ -1,5 +1,7 @@
 import { useSearchParams } from '../shims/useSearchParams';
 import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import { acikTema } from '../utils/acikTema';
 
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
@@ -46,17 +48,17 @@ import type { Odak, Sonda, Isaret, AdayDurum } from '../components/MarsKure';
 // ----------------------------------------------------------------------
 
 const PANEL_SX = {
-  bgcolor: 'rgba(11,15,25,0.9)',
-  border: '1px solid rgba(255,255,255,0.09)',
+  bgcolor: '#f8fafc',
+  border: '1px solid rgba(15,23,42,0.09)',
   borderRadius: 2,
-  color: '#e5e7eb',
+  color: '#1e293b',
   p: 2,
   overflowY: 'auto',
   scrollbarWidth: 'thin',
-  scrollbarColor: 'rgba(255,255,255,0.2) transparent',
+  scrollbarColor: 'rgba(15,23,42,0.2) transparent',
 } as const;
 
-const ETIKET_SX = { color: '#94a3b8', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', fontWeight: 600 } as const;
+const ETIKET_SX = { color: '#475569', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', fontWeight: 600 } as const;
 
 const BUTON_SX = {
   color: '#fff',
@@ -65,6 +67,16 @@ const BUTON_SX = {
   fontWeight: 600,
   textTransform: 'none',
   '&:hover': { borderColor: '#fff', bgcolor: 'rgba(255,255,255,0.12)' },
+} as const;
+
+// Açık panellerdeki ikincil düğme
+const BUTON_SX_ACIK = {
+  color: '#0f172a',
+  borderColor: 'rgba(15,23,42,0.25)',
+  bgcolor: '#ffffff',
+  fontWeight: 600,
+  textTransform: 'none',
+  '&:hover': { borderColor: '#0f172a', bgcolor: 'rgba(15,23,42,0.05)' },
 } as const;
 
 // Sunum modu: her adım bir görev senaryosu (ağırlıklar + kısıtlar)
@@ -352,6 +364,11 @@ export default function MarsKonumlamaPage() {
     [aktif, t]
   );
 
+  // Büyük harf dönüşümü dile göre yapılır: EN modda 'i' → 'I' (Türkçe 'İ' değil).
+  useEffect(() => {
+    document.documentElement.lang = dil;
+  }, [dil]);
+
   // ---- bilgi kartı içeriği
   const kartIcerigi = useMemo<KartIcerigi | null>(() => {
     if (secili?.tip === 'aday') {
@@ -367,7 +384,9 @@ export default function MarsKonumlamaPage() {
   }, [secili, sonda, sondaVeri, sirali, uygunlar.length]);
 
   const kart = kartIcerigi ? (
-    <BilgiKarti icerik={kartIcerigi} dil={dil} onKapat={kapat} onDetay={(id) => analizAc(id)} onAdaSec={adaySec} onKarsilastir={karsilastirAc} />
+    <ThemeProvider theme={acikTema}>
+      <BilgiKarti icerik={kartIcerigi} dil={dil} onKapat={kapat} onDetay={(id) => analizAc(id)} onAdaSec={adaySec} onKarsilastir={karsilastirAc} />
+    </ThemeProvider>
   ) : null;
 
   const ipucu = useMemo(() => {
@@ -410,12 +429,13 @@ export default function MarsKonumlamaPage() {
       >
         {/* ===================== SOL PANEL (HUD) ===================== */}
         <Box sx={{ ...PANEL_SX, display: 'grid', alignContent: 'start', gap: 1.5, order: { xs: 2, lg: 1 } }}>
+          <ThemeProvider theme={acikTema}>
           <Box>
-            <Chip size="small" label={t.rozet} sx={{ bgcolor: 'rgba(201,91,66,0.2)', color: '#fca58f', border: '1px solid rgba(201,91,66,0.5)', fontWeight: 700, mb: 1 }} />
-            <Typography component="h1" sx={{ fontWeight: 800, fontSize: 18, lineHeight: 1.25, color: '#fff' }}>
+            <Chip size="small" label={t.rozet} sx={{ bgcolor: 'rgba(201,91,66,0.2)', color: '#b4432c', border: '1px solid rgba(201,91,66,0.5)', fontWeight: 700, mb: 1 }} />
+            <Typography component="h1" sx={{ fontWeight: 800, fontSize: 18, lineHeight: 1.25, color: '#0f172a' }}>
               Evil Eye on Mars <span style={{ color: '#c95b42' }}>|</span> Mars Landing &amp; Astrobiology Matrix
             </Typography>
-            <Typography variant="caption" sx={{ color: '#94a3b8', display: 'block', mt: 0.5, lineHeight: 1.45 }}>
+            <Typography variant="caption" sx={{ color: '#475569', display: 'block', mt: 0.5, lineHeight: 1.45 }}>
               {t.alt}
             </Typography>
           </Box>
@@ -435,9 +455,9 @@ export default function MarsKonumlamaPage() {
                     title={t.senaryoIpucu[s.id as keyof typeof t.senaryoIpucu]}
                     onClick={() => senaryoUygula(s)}
                     sx={{
-                      color: aktifSen ? '#fff' : '#cbd5e1',
-                      bgcolor: aktifSen ? 'rgba(201,91,66,0.4)' : 'rgba(255,255,255,0.06)',
-                      border: `1px solid ${aktifSen ? '#c95b42' : 'rgba(255,255,255,0.12)'}`,
+                      color: aktifSen ? '#0f172a' : '#334155',
+                      bgcolor: aktifSen ? 'rgba(201,91,66,0.4)' : 'rgba(15,23,42,0.06)',
+                      border: `1px solid ${aktifSen ? '#c95b42' : 'rgba(15,23,42,0.12)'}`,
                       fontWeight: 600,
                     }}
                   />
@@ -449,12 +469,12 @@ export default function MarsKonumlamaPage() {
           {/* iki bağımsız kaydırıcı */}
           <Box sx={{ display: 'grid', gap: 1 }}>
             {[
-              { anahtar: 'g', etiket: t.guvenlikEtiket, yardim: t.guvenlikYardim, deger: agirlikG, set: setAgirlikG, renk: '#22d3ee' },
+              { anahtar: 'g', etiket: t.guvenlikEtiket, yardim: t.guvenlikYardim, deger: agirlikG, set: setAgirlikG, renk: '#0891b2' },
               { anahtar: 'a', etiket: t.astroEtiket, yardim: t.astroYardim, deger: agirlikA, set: setAgirlikA, renk: '#f59e0b' },
             ].map((k) => (
               <Box key={k.anahtar}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 1 }}>
-                  <Typography sx={{ fontSize: 12.5, fontWeight: 700, color: '#f1f5f9', lineHeight: 1.3 }}>{k.etiket}</Typography>
+                  <Typography sx={{ fontSize: 12.5, fontWeight: 700, color: '#0f172a', lineHeight: 1.3 }}>{k.etiket}</Typography>
                   <Typography sx={{ fontVariantNumeric: 'tabular-nums', fontWeight: 800, fontSize: 18, color: k.renk }}>%{k.deger}</Typography>
                 </Box>
                 <Slider
@@ -467,43 +487,43 @@ export default function MarsKonumlamaPage() {
                   aria-label={k.etiket}
                   sx={{ color: k.renk, mt: 0, py: 0.75, '& .MuiSlider-rail': { opacity: 0.25 }, '& .MuiSlider-thumb': { boxShadow: `0 0 10px ${k.renk}` } }}
                 />
-                <Typography variant="caption" sx={{ color: '#7c8aa0' }}>{k.yardim}</Typography>
+                <Typography variant="caption" sx={{ color: '#64748b' }}>{k.yardim}</Typography>
               </Box>
             ))}
-            <Typography variant="caption" sx={{ color: etkin.sifir ? '#fcd34d' : '#7c8aa0', lineHeight: 1.45 }}>
+            <Typography variant="caption" sx={{ color: etkin.sifir ? '#b45309' : '#64748b', lineHeight: 1.45 }}>
               {etkin.sifir ? t.sifirAgirlik : t.bagimsiz}
             </Typography>
           </Box>
 
           {/* mühendislik kısıtları (No-Go) */}
-          <Box sx={{ p: 1.25, borderRadius: 1.5, bgcolor: kisitAcik ? 'rgba(244,63,94,0.09)' : 'rgba(255,255,255,0.04)', border: `1px solid ${kisitAcik ? 'rgba(244,63,94,0.45)' : 'rgba(255,255,255,0.08)'}` }}>
+          <Box sx={{ p: 1.25, borderRadius: 1.5, bgcolor: kisitAcik ? 'rgba(244,63,94,0.09)' : 'rgba(15,23,42,0.04)', border: `1px solid ${kisitAcik ? 'rgba(244,63,94,0.45)' : 'rgba(15,23,42,0.08)'}` }}>
             <FormControlLabel
               sx={{ m: 0, alignItems: 'flex-start', gap: 0.5 }}
               control={<Switch size="small" checked={kisitAcik} onChange={(_e, c) => setKisitAcik(c)} color="error" />}
-              label={<Typography sx={{ fontSize: 12.5, fontWeight: 700, color: '#f1f5f9', lineHeight: 1.35, mt: 0.5 }}>{t.kisitBaslik}</Typography>}
+              label={<Typography sx={{ fontSize: 12.5, fontWeight: 700, color: '#0f172a', lineHeight: 1.35, mt: 0.5 }}>{t.kisitBaslik}</Typography>}
             />
-            <Typography variant="caption" sx={{ color: '#94a3b8', display: 'block', lineHeight: 1.4 }}>{t.kisitAciklama}</Typography>
+            <Typography variant="caption" sx={{ color: '#475569', display: 'block', lineHeight: 1.4 }}>{t.kisitAciklama}</Typography>
             {kisitAcik && (
               <Box sx={{ mt: 0.75, display: 'grid', gap: 0.25 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="caption" sx={{ color: '#cbd5e1' }}>{t.kisitEgim}</Typography>
-                  <Typography variant="caption" sx={{ color: '#fff', fontWeight: 700 }}>≤ {kisitEgim}°</Typography>
+                  <Typography variant="caption" sx={{ color: '#334155' }}>{t.kisitEgim}</Typography>
+                  <Typography variant="caption" sx={{ color: '#0f172a', fontWeight: 700 }}>≤ {kisitEgim}°</Typography>
                 </Box>
                 <Slider size="small" min={1} max={25} step={0.5} value={kisitEgim} onChange={(_e, v) => setKisitEgim(v as number)} aria-label={t.kisitEgim} color="error" sx={{ py: 0.5 }} />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="caption" sx={{ color: '#cbd5e1' }}>{t.kisitKaya}</Typography>
-                  <Typography variant="caption" sx={{ color: '#fff', fontWeight: 700 }}>≤ %{kisitKaya}</Typography>
+                  <Typography variant="caption" sx={{ color: '#334155' }}>{t.kisitKaya}</Typography>
+                  <Typography variant="caption" sx={{ color: '#0f172a', fontWeight: 700 }}>≤ %{kisitKaya}</Typography>
                 </Box>
                 <Slider size="small" min={2} max={20} step={1} value={kisitKaya} onChange={(_e, v) => setKisitKaya(v as number)} aria-label={t.kisitKaya} color="error" sx={{ py: 0.5 }} />
-                <Typography variant="caption" sx={{ color: '#7c8aa0', lineHeight: 1.4 }}>{t.kisitNot}</Typography>
+                <Typography variant="caption" sx={{ color: '#64748b', lineHeight: 1.4 }}>{t.kisitNot}</Typography>
               </Box>
             )}
           </Box>
 
           {/* taviz göstergesi */}
           <Box sx={{ p: 1.25, borderRadius: 1.5, bgcolor: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.3)' }}>
-            <Typography sx={{ ...ETIKET_SX, color: '#fcd34d', mb: 0.4 }}>{t.tavizBaslik}</Typography>
-            <Typography sx={{ fontSize: 12.5, color: '#f1f5f9', lineHeight: 1.5 }}>{tavizMetni(t, taviz)}</Typography>
+            <Typography sx={{ ...ETIKET_SX, color: '#b45309', mb: 0.4 }}>{t.tavizBaslik}</Typography>
+            <Typography sx={{ fontSize: 12.5, color: '#0f172a', lineHeight: 1.5 }}>{tavizMetni(t, taviz)}</Typography>
           </Box>
 
           {/* veri seti */}
@@ -512,8 +532,8 @@ export default function MarsKonumlamaPage() {
             control={<Switch size="small" checked={taslakDahil} onChange={(_e, c) => setTaslakDahil(c)} />}
             label={
               <Box sx={{ mt: 0.4 }}>
-                <Typography sx={{ fontSize: 12.5, fontWeight: 700, color: '#f1f5f9', lineHeight: 1.3 }}>{doldur(t.taslakAnahtar, { n: taslakSayisi })}</Typography>
-                <Typography variant="caption" sx={{ color: '#7c8aa0', lineHeight: 1.35, display: 'block' }}>{t.taslakIpucu}</Typography>
+                <Typography sx={{ fontSize: 12.5, fontWeight: 700, color: '#0f172a', lineHeight: 1.3 }}>{doldur(t.taslakAnahtar, { n: taslakSayisi })}</Typography>
+                <Typography variant="caption" sx={{ color: '#64748b', lineHeight: 1.35, display: 'block' }}>{t.taslakIpucu}</Typography>
               </Box>
             }
           />
@@ -542,10 +562,10 @@ export default function MarsKonumlamaPage() {
                 <TextField
                   {...p}
                   placeholder={t.araSec}
-                  sx={{ '& .MuiOutlinedInput-root': { color: '#fff', bgcolor: 'rgba(255,255,255,0.04)', '& fieldset': { borderColor: 'rgba(255,255,255,0.18)' } }, '& input::placeholder': { color: '#94a3b8', opacity: 1 } }}
+                  sx={{ '& .MuiOutlinedInput-root': { color: '#0f172a', bgcolor: 'rgba(15,23,42,0.04)', '& fieldset': { borderColor: 'rgba(15,23,42,0.18)' } }, '& input::placeholder': { color: '#475569', opacity: 1 } }}
                 />
               )}
-              slotProps={{ paper: { sx: { bgcolor: '#101726', color: '#e5e7eb', backgroundImage: 'none' } } }}
+              slotProps={{ paper: { sx: { bgcolor: '#ffffff', color: '#1e293b', backgroundImage: 'none' } } }}
             />
           </Box>
 
@@ -576,37 +596,37 @@ export default function MarsKonumlamaPage() {
                         cursor: 'pointer',
                         color: 'inherit',
                         font: 'inherit',
-                        bgcolor: aktifSatir ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${aktifSatir ? renk : 'rgba(255,255,255,0.07)'}`,
+                        bgcolor: aktifSatir ? 'rgba(15,23,42,0.1)' : 'rgba(15,23,42,0.04)',
+                        border: `1px solid ${aktifSatir ? renk : 'rgba(15,23,42,0.07)'}`,
                         position: 'relative',
                         overflow: 'hidden',
                         transition: 'background-color 150ms, border-color 150ms',
-                        '&:hover': { bgcolor: 'rgba(255,255,255,0.09)' },
+                        '&:hover': { bgcolor: 'rgba(15,23,42,0.09)' },
                         '&:focus-visible': { outline: `2px solid ${renk}`, outlineOffset: 2 },
                       }}
                     >
                       <Box sx={{ position: 'absolute', inset: 0, width: `${s.skor}%`, bgcolor: `${renk}1f`, transition: 'width 250ms ease', pointerEvents: 'none' }} />
                       <Typography sx={{ position: 'relative', fontWeight: 800, color: renk, fontSize: 13, fontVariantNumeric: 'tabular-nums' }}>#{s.sira}</Typography>
-                      <Typography sx={{ position: 'relative', fontSize: 13, fontWeight: 600, color: '#f1f5f9', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <Typography sx={{ position: 'relative', fontSize: 13, fontWeight: 600, color: '#0f172a', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {s.aday.ad}
-                        {s.aday.veri === 'taslak' && <span style={{ marginLeft: 6, fontSize: 10, color: '#fcd34d' }}>◌</span>}
-                        {d ? <span style={{ marginLeft: 6, fontSize: 11, color: d > 0 ? '#34d399' : '#fb7185' }}>{d > 0 ? `▲${d}` : `▼${-d}`}</span> : null}
+                        {s.aday.veri === 'taslak' && <span style={{ marginLeft: 6, fontSize: 10, color: '#b45309' }}>◌</span>}
+                        {d ? <span style={{ marginLeft: 6, fontSize: 11, color: d > 0 ? '#059669' : '#e11d48' }}>{d > 0 ? `▲${d}` : `▼${-d}`}</span> : null}
                       </Typography>
-                      <Typography sx={{ position: 'relative', fontWeight: 800, fontSize: 14, fontVariantNumeric: 'tabular-nums', color: '#fff' }}>{s.skor.toFixed(1)}</Typography>
+                      <Typography sx={{ position: 'relative', fontWeight: 800, fontSize: 14, fontVariantNumeric: 'tabular-nums', color: '#0f172a' }}>{s.skor.toFixed(1)}</Typography>
                     </Box>
                   </Box>
                 );
               })}
             </Box>
             {(gizliSayi > 0 || hepsiGoster) && uygunlar.length > ILK_GORUNEN && (
-              <Button size="small" onClick={() => setHepsiGoster((x) => !x)} sx={{ mt: 0.5, textTransform: 'none', color: '#93c5fd' }}>
+              <Button size="small" onClick={() => setHepsiGoster((x) => !x)} sx={{ mt: 0.5, textTransform: 'none', color: '#1d4ed8' }}>
                 {hepsiGoster ? t.azGoster : doldur(t.tumunuGoster, { n: uygunlar.length })}
               </Button>
             )}
 
             {elenenler.length > 0 && (
               <Box sx={{ mt: 1 }}>
-                <Typography sx={{ ...ETIKET_SX, color: '#fda4af' }}>{doldur(t.elenenBaslik, { n: elenenler.length })}</Typography>
+                <Typography sx={{ ...ETIKET_SX, color: '#be123c' }}>{doldur(t.elenenBaslik, { n: elenenler.length })}</Typography>
                 <Box sx={{ mt: 0.5, display: 'grid', gap: 0.4 }}>
                   {elenenler.map((s) => (
                     <Box
@@ -617,8 +637,8 @@ export default function MarsKonumlamaPage() {
                       sx={{ display: 'flex', alignItems: 'center', gap: 1, p: '4px 10px', borderRadius: 1.25, cursor: 'pointer', color: 'inherit', font: 'inherit', textAlign: 'left', bgcolor: 'rgba(244,63,94,0.07)', border: '1px solid rgba(244,63,94,0.28)', '&:hover': { bgcolor: 'rgba(244,63,94,0.14)' } }}
                     >
                       <Typography sx={{ color: '#f43f5e', fontWeight: 800, fontSize: 12 }}>✕</Typography>
-                      <Typography sx={{ flex: 1, fontSize: 12.5, color: '#cbd5e1', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.aday.ad}</Typography>
-                      <Typography sx={{ fontSize: 10.5, color: '#fda4af', whiteSpace: 'nowrap' }}>
+                      <Typography sx={{ flex: 1, fontSize: 12.5, color: '#334155', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.aday.ad}</Typography>
+                      <Typography sx={{ fontSize: 10.5, color: '#be123c', whiteSpace: 'nowrap' }}>
                         {s.ihlaller.map((i) => doldur(i.tip === 'egim' ? t.ihlalEgim : t.ihlalKaya, { d: i.deger, s: i.sinir })).join(' · ')}
                       </Typography>
                     </Box>
@@ -640,9 +660,9 @@ export default function MarsKonumlamaPage() {
 
           {/* karşılaştır */}
           <Box sx={{ p: 1.25, borderRadius: 1.5, bgcolor: 'rgba(244,114,182,0.07)', border: '1px solid rgba(244,114,182,0.3)', display: 'grid', gap: 0.75 }}>
-            <Typography sx={{ ...ETIKET_SX, color: '#f9a8d4' }}>{t.karsilastir.bolumBaslik}</Typography>
-            <Typography variant="caption" sx={{ color: '#cbd5e1', lineHeight: 1.45 }}>{t.karsilastir.bolumIpucu}</Typography>
-            <Button size="small" variant="outlined" onClick={() => karsilastirAc()} startIcon={<Iconify icon="solar:transfer-horizontal-bold" width={18} />} sx={{ ...BUTON_SX, justifySelf: 'start' }}>
+            <Typography sx={{ ...ETIKET_SX, color: '#be185d' }}>{t.karsilastir.bolumBaslik}</Typography>
+            <Typography variant="caption" sx={{ color: '#334155', lineHeight: 1.45 }}>{t.karsilastir.bolumIpucu}</Typography>
+            <Button size="small" variant="outlined" onClick={() => karsilastirAc()} startIcon={<Iconify icon="solar:transfer-horizontal-bold" width={18} />} sx={{ ...BUTON_SX_ACIK, justifySelf: 'start' }}>
               {t.karsilastir.ac}
             </Button>
           </Box>
@@ -658,7 +678,7 @@ export default function MarsKonumlamaPage() {
               ].map((k) => (
                 <FormControlLabel
                   key={k.ad}
-                  sx={{ m: 0, '& .MuiFormControlLabel-label': { fontSize: 12.5, color: '#e2e8f0' } }}
+                  sx={{ m: 0, '& .MuiFormControlLabel-label': { fontSize: 12.5, color: '#1e293b' } }}
                   control={<Checkbox size="small" checked={k.deger} onChange={(_e, c) => k.set(c)} sx={{ py: 0.4 }} />}
                   label={k.ad}
                 />
@@ -668,7 +688,7 @@ export default function MarsKonumlamaPage() {
                   {(Object.keys(adGruplari) as OzellikGrup[]).map((g) => (
                     <FormControlLabel
                       key={g}
-                      sx={{ m: 0, '& .MuiFormControlLabel-label': { fontSize: 12, color: '#cbd5e1' } }}
+                      sx={{ m: 0, '& .MuiFormControlLabel-label': { fontSize: 12, color: '#334155' } }}
                       control={<Checkbox size="small" checked={adGruplari[g]} onChange={(_e, c) => setAdGruplari((o) => ({ ...o, [g]: c }))} sx={{ py: 0.25 }} />}
                       label={t.adlarGruplari[g]}
                     />
@@ -677,6 +697,7 @@ export default function MarsKonumlamaPage() {
               )}
             </Box>
           </Box>
+          </ThemeProvider>
         </Box>
 
         {/* ===================== ORTA: 3B KÜRE ===================== */}
@@ -787,6 +808,7 @@ export default function MarsKonumlamaPage() {
 
         {/* ===================== SAĞ PANEL (TELEMETRİ) ===================== */}
         <Box sx={{ ...PANEL_SX, display: 'grid', alignContent: 'start', gap: 2, order: 3 }}>
+          <ThemeProvider theme={acikTema}>
           <Typography sx={ETIKET_SX}>{t.telemetri}</Typography>
 
           {seciliAday ? (
@@ -803,7 +825,7 @@ export default function MarsKonumlamaPage() {
           ) : kartIcerigi ? (
             <BilgiKarti icerik={kartIcerigi} dil={dil} kompakt onAdaSec={adaySec} />
           ) : (
-            <Typography variant="body2" sx={{ color: '#94a3b8', lineHeight: 1.55 }}>{t.secimYok}</Typography>
+            <Typography variant="body2" sx={{ color: '#475569', lineHeight: 1.55 }}>{t.secimYok}</Typography>
           )}
 
           <DengeGrafigi
@@ -825,25 +847,27 @@ export default function MarsKonumlamaPage() {
           <Box component="details" sx={{ '& summary': { cursor: 'pointer', ...ETIKET_SX, listStyle: 'revert' } }}>
             <summary>{t.yontem}</summary>
             <Box sx={{ mt: 1, display: 'grid', gap: 1 }}>
-              <Typography sx={{ fontFamily: 'ui-monospace, Consolas, monospace', fontSize: 12, color: '#fff', bgcolor: 'rgba(255,255,255,0.06)', p: 1, borderRadius: 1, lineHeight: 1.5 }}>
+              <Typography sx={{ fontFamily: 'ui-monospace, Consolas, monospace', fontSize: 12, color: '#0f172a', bgcolor: 'rgba(15,23,42,0.06)', p: 1, borderRadius: 1, lineHeight: 1.5 }}>
                 {t.formul}
               </Typography>
-              <Typography variant="caption" sx={{ color: '#cbd5e1', lineHeight: 1.5 }}>{t.formulAcik}</Typography>
-              <Typography variant="caption" sx={{ color: '#cbd5e1', lineHeight: 1.5 }}>{t.esikler}</Typography>
-              <Typography variant="caption" sx={{ color: '#fcd34d', lineHeight: 1.5 }}>{t.sinirlar}</Typography>
+              <Typography variant="caption" sx={{ color: '#334155', lineHeight: 1.5 }}>{t.formulAcik}</Typography>
+              <Typography variant="caption" sx={{ color: '#334155', lineHeight: 1.5 }}>{t.esikler}</Typography>
+              <Typography variant="caption" sx={{ color: '#b45309', lineHeight: 1.5 }}>{t.sinirlar}</Typography>
               <Typography sx={{ ...ETIKET_SX, mt: 0.5 }}>{t.kaynaklar}</Typography>
               <Box component="ul" sx={{ m: 0, pl: 2, listStyleType: 'disc' }}>
                 {VERI_KAYNAKLARI.map((k) => (
-                  <Typography key={k.ad} component="li" variant="caption" sx={{ display: 'list-item', color: '#cbd5e1', lineHeight: 1.5 }}>
-                    <a href={k.url} target="_blank" rel="noopener noreferrer" style={{ color: '#7dd3fc' }}>{k.ad}</a> — {k.rol[dil]}
+                  <Typography key={k.ad} component="li" variant="caption" sx={{ display: 'list-item', color: '#334155', lineHeight: 1.5 }}>
+                    <a href={k.url} target="_blank" rel="noopener noreferrer" style={{ color: '#0369a1' }}>{k.ad}</a> — {k.rol[dil]}
                   </Typography>
                 ))}
               </Box>
             </Box>
           </Box>
+          </ThemeProvider>
         </Box>
       </Box>
 
+      <ThemeProvider theme={acikTema}>
       <AnalizModal
         acik={analizAcik}
         onKapat={() => setAnalizAcik(false)}
@@ -874,6 +898,7 @@ export default function MarsKonumlamaPage() {
         agirlikA={agirlikA}
         kisit={kisit}
       />
+      </ThemeProvider>
     </DashboardContent>
   );
 }

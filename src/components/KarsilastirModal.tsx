@@ -39,9 +39,9 @@ type Props = {
   kisit: Kisit;
 };
 
-const A_RENK = '#22d3ee';
-const B_RENK = '#f472b6';
-const etiket = { color: '#94a3b8', fontSize: 11, letterSpacing: 0.7, textTransform: 'uppercase', fontWeight: 700 } as const;
+const A_RENK = '#0891b2';
+const B_RENK = '#db2777';
+const etiket = { color: '#475569', fontSize: 11, letterSpacing: 0.7, textTransform: 'uppercase', fontWeight: 700 } as const;
 
 /** Beş eksenli profil radarı (0–1; dışarısı daha iyi). Eğim, kaya ve rakım riski tersine çevrilip marj olarak çizilir. */
 function Radar({ a, b, etiketler }: { a: Aday; b: Aday; etiketler: string[] }) {
@@ -59,18 +59,18 @@ function Radar({ a, b, etiketler }: { a: Aday; b: Aday; etiketler: string[] }) {
   return (
     <Box component="svg" viewBox="-34 -6 268 212" role="img" aria-label={etiketler.join(', ')} sx={{ width: 1, maxWidth: 290, height: 'auto', mx: 'auto', display: 'block' }}>
       {[0.25, 0.5, 0.75, 1].map((s) => (
-        <polygon key={s} points={yol([s, s, s, s, s])} fill="none" stroke="rgba(255,255,255,0.12)" />
+        <polygon key={s} points={yol([s, s, s, s, s])} fill="none" stroke="rgba(15,23,42,0.12)" />
       ))}
       {etiketler.map((_e, i) => {
         const [x, y] = nokta(1, i);
-        return <line key={i} x1={C} y1={C} x2={x} y2={y} stroke="rgba(255,255,255,0.12)" />;
+        return <line key={i} x1={C} y1={C} x2={x} y2={y} stroke="rgba(15,23,42,0.12)" />;
       })}
       <polygon points={yol(eksen(a))} fill={`${A_RENK}33`} stroke={A_RENK} strokeWidth="2" />
       <polygon points={yol(eksen(b))} fill={`${B_RENK}33`} stroke={B_RENK} strokeWidth="2" />
       {etiketler.map((e, i) => {
         const [x, y] = nokta(1.2, i);
         return (
-          <text key={e} x={x} y={y + 3} fill="#cbd5e1" fontSize="8.5" textAnchor="middle">
+          <text key={e} x={x} y={y + 3} fill="#334155" fontSize="8.5" textAnchor="middle">
             {e}
           </text>
         );
@@ -157,10 +157,10 @@ export default function KarsilastirModal({ acik, onKapat, dil, adaylar, aId, bId
         <TextField
           {...p}
           label={etk}
-          sx={{ '& .MuiOutlinedInput-root': { color: '#fff', '& fieldset': { borderColor: renk }, '&:hover fieldset': { borderColor: renk } }, '& label': { color: renk } }}
+          sx={{ '& .MuiOutlinedInput-root': { color: '#0f172a', '& fieldset': { borderColor: renk }, '&:hover fieldset': { borderColor: renk } }, '& label': { color: renk } }}
         />
       )}
-      slotProps={{ paper: { sx: { bgcolor: '#101726', color: '#e5e7eb', backgroundImage: 'none' } } }}
+      slotProps={{ paper: { sx: { bgcolor: '#ffffff', color: '#1e293b', backgroundImage: 'none' } } }}
     />
   );
 
@@ -189,14 +189,14 @@ export default function KarsilastirModal({ acik, onKapat, dil, adaylar, aId, bId
       maxWidth="md"
       fullWidth
       scroll="paper"
-      slotProps={{ paper: { sx: { bgcolor: '#0b101c', color: '#e5e7eb', backgroundImage: 'none', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 3 } } }}
+      slotProps={{ paper: { sx: { bgcolor: '#ffffff', color: '#1e293b', backgroundImage: 'none', border: '1px solid rgba(15,23,42,0.12)', borderRadius: 3 } } }}
     >
-      <Box sx={{ p: 2.25, pb: 1.5, display: 'flex', alignItems: 'flex-start', gap: 1, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+      <Box sx={{ p: 2.25, pb: 1.5, display: 'flex', alignItems: 'flex-start', gap: 1, borderBottom: '1px solid rgba(15,23,42,0.1)' }}>
         <Box sx={{ flex: 1 }}>
-          <Typography variant="h6" sx={{ fontWeight: 800, color: '#fff' }}>{k.baslik}</Typography>
-          <Typography variant="body2" sx={{ color: '#94a3b8' }}>{k.alt}</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 800, color: '#0f172a' }}>{k.baslik}</Typography>
+          <Typography variant="body2" sx={{ color: '#475569' }}>{k.alt}</Typography>
         </Box>
-        <IconButton onClick={onKapat} aria-label={t.kapat} sx={{ color: '#94a3b8' }}>
+        <IconButton onClick={onKapat} aria-label={t.kapat} sx={{ color: '#475569' }}>
           <Iconify icon="mingcute:close-line" />
         </IconButton>
       </Box>
@@ -207,31 +207,31 @@ export default function KarsilastirModal({ acik, onKapat, dil, adaylar, aId, bId
           {secici(b, B_RENK, k.bolgeB, (id) => onDegis(a.id, id), a.id)}
         </Box>
 
-        <Box sx={{ p: 1.75, borderRadius: 2, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <Box sx={{ p: 1.75, borderRadius: 2, bgcolor: 'rgba(15,23,42,0.05)', border: '1px solid rgba(15,23,42,0.08)' }}>
           <Typography sx={{ ...etiket, mb: 0.5 }}>{k.ozet}</Typography>
-          <Typography sx={{ fontSize: 14, lineHeight: 1.6, color: '#f1f5f9' }}>{ozet}</Typography>
+          <Typography sx={{ fontSize: 14, lineHeight: 1.6, color: '#0f172a' }}>{ozet}</Typography>
         </Box>
 
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1.55fr 1fr' }, gap: 2.25, alignItems: 'start' }}>
           {/* yan yana tablo */}
-          <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: '0.8fr 1fr 1fr', bgcolor: 'rgba(255,255,255,0.06)' }}>
+          <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid rgba(15,23,42,0.1)' }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: '0.8fr 1fr 1fr', bgcolor: 'rgba(15,23,42,0.06)' }}>
               <Box sx={{ p: 1 }} />
               {[a, b].map((x, i) => (
-                <Box key={x.id} sx={{ p: 1, borderLeft: '1px solid rgba(255,255,255,0.08)', borderTop: `3px solid ${i === 0 ? A_RENK : B_RENK}` }}>
-                  <Typography sx={{ fontWeight: 800, fontSize: 13.5, color: '#fff', lineHeight: 1.25 }}>{x.ad}</Typography>
+                <Box key={x.id} sx={{ p: 1, borderLeft: '1px solid rgba(15,23,42,0.08)', borderTop: `3px solid ${i === 0 ? A_RENK : B_RENK}` }}>
+                  <Typography sx={{ fontWeight: 800, fontSize: 13.5, color: '#0f172a', lineHeight: 1.25 }}>{x.ad}</Typography>
                 </Box>
               ))}
             </Box>
             {satirlar.map((s) => (
-              <Box key={s.ad} sx={{ display: 'grid', gridTemplateColumns: '0.8fr 1fr 1fr', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+              <Box key={s.ad} sx={{ display: 'grid', gridTemplateColumns: '0.8fr 1fr 1fr', borderTop: '1px solid rgba(15,23,42,0.07)' }}>
                 <Typography sx={{ ...etiket, p: 1, alignSelf: 'center' }}>{s.ad}</Typography>
                 {[s.a, s.b].map((v, i) => {
                   const iyi = s.iyi === (i === 0 ? 1 : 2);
                   return (
-                    <Box key={i} sx={{ p: 1, borderLeft: '1px solid rgba(255,255,255,0.07)', bgcolor: iyi ? 'rgba(16,185,129,0.12)' : 'transparent', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <Box key={i} sx={{ p: 1, borderLeft: '1px solid rgba(15,23,42,0.07)', bgcolor: iyi ? 'rgba(16,185,129,0.12)' : 'transparent', display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       {iyi && <Iconify icon="solar:check-circle-bold" width={15} sx={{ color: '#10b981', flexShrink: 0 }} />}
-                      <Typography component="div" sx={{ fontSize: 12.5, color: '#e2e8f0', lineHeight: 1.4, fontVariantNumeric: 'tabular-nums' }}>{v}</Typography>
+                      <Typography component="div" sx={{ fontSize: 12.5, color: '#1e293b', lineHeight: 1.4, fontVariantNumeric: 'tabular-nums' }}>{v}</Typography>
                     </Box>
                   );
                 })}
@@ -248,7 +248,7 @@ export default function KarsilastirModal({ acik, onKapat, dil, adaylar, aId, bId
                 {[[a, A_RENK], [b, B_RENK]].map(([x, c]) => (
                   <Box key={(x as Aday).id} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
                     <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: c as string }} />
-                    <Typography sx={{ fontSize: 11.5, color: '#cbd5e1' }}>{(x as Aday).ad.split(' ')[0]}</Typography>
+                    <Typography sx={{ fontSize: 11.5, color: '#334155' }}>{(x as Aday).ad.split(' ')[0]}</Typography>
                   </Box>
                 ))}
               </Box>
@@ -256,7 +256,7 @@ export default function KarsilastirModal({ acik, onKapat, dil, adaylar, aId, bId
 
             <Box>
               <Typography sx={etiket}>{k.basaBas}</Typography>
-              <Box sx={{ position: 'relative', mt: 0.75, height: 26, borderRadius: 1, overflow: 'hidden', display: 'flex', border: '1px solid rgba(255,255,255,0.14)' }}>
+              <Box sx={{ position: 'relative', mt: 0.75, height: 26, borderRadius: 1, overflow: 'hidden', display: 'flex', border: '1px solid rgba(15,23,42,0.14)' }}>
                 {kazananSerit.bolum > 0 ? (
                   <>
                     <Box sx={{ width: `${kazananSerit.bolum}%`, bgcolor: `${kazananSerit.solRenk}55` }} />
@@ -265,14 +265,14 @@ export default function KarsilastirModal({ acik, onKapat, dil, adaylar, aId, bId
                 ) : (
                   <Box sx={{ flex: 1, bgcolor: `${bilgi.aHep ? A_RENK : bilgi.bHep ? B_RENK : '#64748b'}55` }} />
                 )}
-                <Box sx={{ position: 'absolute', top: 0, bottom: 0, left: `calc(${kazananSerit.pay}% - 1px)`, width: 2, bgcolor: '#fff', boxShadow: '0 0 6px #fff' }} />
+                <Box sx={{ position: 'absolute', top: 0, bottom: 0, left: `calc(${kazananSerit.pay}% - 1px)`, width: 2, bgcolor: '#0f172a', boxShadow: '0 0 6px #0f172a' }} />
               </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: 11, mt: 0.5 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', color: '#475569', fontSize: 11, mt: 0.5 }}>
                 <span>{t.guvenlik}</span>
                 <span>{t.astro}</span>
               </Box>
-              <Typography sx={{ fontSize: 12.5, color: '#e2e8f0', lineHeight: 1.5, mt: 0.5 }}>{kazananSerit.metin}</Typography>
-              <Typography sx={{ fontSize: 11.5, color: '#94a3b8', lineHeight: 1.45, mt: 0.5 }}>
+              <Typography sx={{ fontSize: 12.5, color: '#1e293b', lineHeight: 1.5, mt: 0.5 }}>{kazananSerit.metin}</Typography>
+              <Typography sx={{ fontSize: 11.5, color: '#475569', lineHeight: 1.45, mt: 0.5 }}>
                 {doldur(k.simdi, { kazanan: onde.ad, fark: fark.toFixed(1) })}
               </Typography>
             </Box>
@@ -288,7 +288,7 @@ export default function KarsilastirModal({ acik, onKapat, dil, adaylar, aId, bId
               sx={{ color: i === 0 ? A_RENK : B_RENK, border: `1px solid ${skorRengi(bilesikSkor(x, agirlikG, agirlikA))}`, bgcolor: 'transparent', fontWeight: 700 }}
             />
           ))}
-          <Typography sx={{ fontSize: 11.5, color: '#7c8aa0', alignSelf: 'center' }}>{t.sinirlar}</Typography>
+          <Typography sx={{ fontSize: 11.5, color: '#64748b', alignSelf: 'center' }}>{t.sinirlar}</Typography>
         </Box>
       </DialogContent>
     </Dialog>
