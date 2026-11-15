@@ -7,6 +7,9 @@ import { baskinAday, birinciAraliklari, boylamMetni, egimDurumu, enlemMetni, kat
 
 import { analogGozlemleri } from '../data/analogGozlemler';
 import { ANALOG_OZELLIKLER, analogEslesme } from '../utils/analog';
+import { vitaPuani } from '../data/vita';
+import { mekeDegeri } from '../data/meke';
+import { GOREV_ESIKLERI, esikKaynakli } from '../data/gorevEsikleri';
 
 import type { Aday, Dil } from '../data/adaylar';
 
@@ -71,6 +74,23 @@ export default function TelemetriKarti({ aday, adaylar, skor, sira, agirlikG, ag
   const RAKIM_ARALIK = [-5, 0]; // km; yalnızca çubuk ölçeği için
   const gozlem = analogGozlemleri(aday.id);
   const meke = analogEslesme(gozlem);
+  const vita = vitaPuani(aday.id);
+  const vitaKaynak =
+    aday.astroKaynak !== 'rubrik'
+      ? t.vitaUzman
+      : vita.jeolog?.puan != null && vita.biyolog?.puan != null
+        ? doldur(t.vitaIkiPuanlayici, { f: (vita.fark ?? 0).toFixed(0) })
+        : vita.biyolog?.puan != null
+          ? t.vitaBiyolog
+          : t.vitaJeolog;
+  const mekeRef = ['ph', 'su_tuzlulugu', 'tuz_toleransi']
+    .map((id) => mekeDegeri(id))
+    .filter((m) => m && m.deger !== null)
+    .map((m) => {
+      const deger = dil === 'en' ? String(m!.deger).replace(/(\d),(\d)/g, '$1.$2') : String(m!.deger);
+      const ad = t.mekeRefAd[m!.id as keyof typeof t.mekeRefAd] ?? m!.parametre;
+      return `${ad}: ${deger}${m!.birim && m!.birim !== '—' ? ' ' + m!.birim : ''}`;
+    });
 
   return (
     <Box sx={{ display: 'grid', gap: 1.75 }}>
@@ -92,56 +112,9 @@ export default function TelemetriKarti({ aday, adaylar, skor, sira, agirlikG, ag
         <Typography variant="caption" sx={{ color: '#94a3b8' }}>
           {t.katki}: {k.guvenlik.toFixed(1)} ({t.katkiGuvenlik}) + {k.astro.toFixed(1)} ({t.katkiAstro}) = <b style={{ color: '#fff' }}>{skor.toFixed(1)}</b>
         </Typography>
-      </Box>
-
-      <Box sx={{ height: 1, bgcolor: 'rgba(255,255,255,0.08)' }} />
-
-      {/* mühendislik telemetrisi */}
-      <Box sx={{ display: 'grid', gap: 1 }}>
-        <Olcu ad={t.egim} deger={aday.egim.toFixed(1)} birim="°" oran={(aday.egim / 15) * 100} renk={EGIM_RENK[egim]} />
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mt: -0.25 }}>
-          <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: EGIM_RENK[egim], flexShrink: 0 }} />
-          <Typography variant="caption" sx={{ color: EGIM_RENK[egim], fontWeight: 600 }}>
-            {t.edl}: {t.egimDurum[egim]}
-          </Typography>
-        </Box>
-        <Olcu ad={t.kaya} deger={String(aday.kaya)} birim="%" oran={(aday.kaya / KAYA_AZAMI) * 100} renk="#60a5fa" />
-        <Olcu ad={t.rakim} deger={aday.rakim.toFixed(1)} birim="km" oran={((aday.rakim - RAKIM_ARALIK[1]) / (RAKIM_ARALIK[0] - RAKIM_ARALIK[1])) * 100} renk="#a78bfa" />
-        <Typography variant="caption" sx={{ color: '#7c8aa0', mt: -0.5 }}>{t.rakimNotu}</Typography>
-      </Box>
-
-      {/* bölgesel arazi: MOLA'dan ölçülen (iniş ölçeğindeki eğimden farklı, km ölçeğinde) */}
-      {aday.bolgeselEgimMedyan !== undefined && (
-        <Box sx={{ display: 'grid', gap: 0.5 }}>
-          <Typography sx={etiket}>{t.araziBaslik}</Typography>
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 1 }}>
-            {[
-              { ad: t.araziEgimMedyan, deger: `${aday.bolgeselEgimMedyan.toFixed(2)}°` },
-              { ad: t.araziEgimDik, deger: aday.bolgeselEgimDik !== undefined ? `${aday.bolgeselEgimDik.toFixed(2)}°` : '—' },
-              { ad: t.araziPuruzluluk, deger: aday.puruzluluk !== undefined ? `${aday.puruzluluk} m` : '—' },
-            ].map((s) => (
-              <Box key={s.ad} sx={{ p: 0.75, borderRadius: 1, bgcolor: 'rgba(255,255,255,0.04)' }}>
-                <Typography sx={{ color: '#94a3b8', fontSize: 10, lineHeight: 1.3 }}>{s.ad}</Typography>
-                <Typography sx={{ color: '#f1f5f9', fontWeight: 700, fontSize: 13, fontVariantNumeric: 'tabular-nums' }}>{s.deger}</Typography>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      )}
-
-      <Box sx={{ height: 1, bgcolor: 'rgba(255,255,255,0.08)' }} />
-
-      <Box>
-        <Typography sx={etiket}>{t.paleo}</Typography>
-        <Typography sx={{ color: '#f1f5f9', fontWeight: 600, fontSize: 14 }}>{aday.ozellik[dil]}</Typography>
-      </Box>
-      <Box>
-        <Typography sx={{ ...etiket, mb: 0.5 }}>{t.mineraller}</Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
-          {aday.mineraller[dil].map((m) => (
-            <Chip key={m} size="small" label={m} sx={{ bgcolor: 'rgba(201,91,66,0.18)', color: '#fca58f', border: '1px solid rgba(201,91,66,0.45)', fontWeight: 600 }} />
-          ))}
-        </Box>
+        <Typography variant="caption" sx={{ color: aday.astroKaynak === 'rubrik' ? '#86efac' : '#fcd34d' }}>
+          {t.astro}: {vitaKaynak}
+        </Typography>
       </Box>
 
       {/* Meke analog eşleşmesi: Dünya analoğu Meke Maarı ile uydudan gözlenebilen özellik benzerliği */}
@@ -181,6 +154,65 @@ export default function TelemetriKarti({ aday, adaylar, skor, sira, agirlikG, ag
               />
             );
           })}
+        </Box>
+        {mekeRef.length > 0 && (
+          <Typography variant="caption" sx={{ color: '#7c8aa0', lineHeight: 1.4 }}>
+            {t.mekeReferans}: {mekeRef.join(' · ')}
+          </Typography>
+        )}
+      </Box>
+
+
+      <Box sx={{ height: 1, bgcolor: 'rgba(255,255,255,0.08)' }} />
+
+      {/* mühendislik telemetrisi */}
+      <Box sx={{ display: 'grid', gap: 1 }}>
+        <Olcu ad={t.egim} deger={aday.egim.toFixed(1)} birim="°" oran={(aday.egim / 15) * 100} renk={EGIM_RENK[egim]} />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mt: -0.25 }}>
+          <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: EGIM_RENK[egim], flexShrink: 0 }} />
+          <Typography variant="caption" sx={{ color: EGIM_RENK[egim], fontWeight: 600 }}>
+            {t.edl}: {t.egimDurum[egim]}
+          </Typography>
+        </Box>
+        <Olcu ad={t.kaya} deger={String(aday.kaya)} birim="%" oran={(aday.kaya / KAYA_AZAMI) * 100} renk="#60a5fa" />
+        {!esikKaynakli(GOREV_ESIKLERI.kaya) && (
+          <Typography variant="caption" sx={{ color: '#fcd34d', mt: -0.5 }}>{t.kayaKaynaksiz}</Typography>
+        )}
+        <Olcu ad={t.rakim} deger={aday.rakim.toFixed(1)} birim="km" oran={((aday.rakim - RAKIM_ARALIK[1]) / (RAKIM_ARALIK[0] - RAKIM_ARALIK[1])) * 100} renk="#a78bfa" />
+        <Typography variant="caption" sx={{ color: '#7c8aa0', mt: -0.5 }}>{t.rakimNotu}</Typography>
+      </Box>
+
+      {/* bölgesel arazi: MOLA'dan ölçülen (iniş ölçeğindeki eğimden farklı, km ölçeğinde) */}
+      {aday.bolgeselEgimMedyan !== undefined && (
+        <Box sx={{ display: 'grid', gap: 0.5 }}>
+          <Typography sx={etiket}>{t.araziBaslik}</Typography>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 1 }}>
+            {[
+              { ad: t.araziEgimMedyan, deger: `${aday.bolgeselEgimMedyan.toFixed(2)}°` },
+              { ad: t.araziEgimDik, deger: aday.bolgeselEgimDik !== undefined ? `${aday.bolgeselEgimDik.toFixed(2)}°` : '—' },
+              { ad: t.araziPuruzluluk, deger: aday.puruzluluk !== undefined ? `${aday.puruzluluk} m` : '—' },
+            ].map((s) => (
+              <Box key={s.ad} sx={{ p: 0.75, borderRadius: 1, bgcolor: 'rgba(255,255,255,0.04)' }}>
+                <Typography sx={{ color: '#94a3b8', fontSize: 10, lineHeight: 1.3 }}>{s.ad}</Typography>
+                <Typography sx={{ color: '#f1f5f9', fontWeight: 700, fontSize: 13, fontVariantNumeric: 'tabular-nums' }}>{s.deger}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      )}
+
+      <Box sx={{ height: 1, bgcolor: 'rgba(255,255,255,0.08)' }} />
+
+      <Box>
+        <Typography sx={etiket}>{t.paleo}</Typography>
+        <Typography sx={{ color: '#f1f5f9', fontWeight: 600, fontSize: 14 }}>{aday.ozellik[dil]}</Typography>
+      </Box>
+      <Box>
+        <Typography sx={{ ...etiket, mb: 0.5 }}>{t.mineraller}</Typography>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+          {aday.mineraller[dil].map((m) => (
+            <Chip key={m} size="small" label={m} sx={{ bgcolor: 'rgba(201,91,66,0.18)', color: '#fca58f', border: '1px solid rgba(201,91,66,0.45)', fontWeight: 600 }} />
+          ))}
         </Box>
       </Box>
 
